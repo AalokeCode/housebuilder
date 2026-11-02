@@ -2,13 +2,17 @@
   "spec": "housespec/1",
   "slug": "dubai-1br-sample",
   "meta": {
-    "title": "1BR Apartment \u2014 Sample (Dubai)",
+    "title": "1BR Apartment — Sample (Dubai)",
     "kind": "apartment",
     "ceiling": 2.7,
     "sources": [
       "photos"
     ],
-    "areaBrief": null
+    "areaBrief": null,
+    "summary": "Sample one-bedroom apartment with open-plan living, a city-view balcony and warm, modern finishes — reconstructed in 3D from listing photos.",
+    "locality": "Dubai (sample)",
+    "status": "published",
+    "reviewed": "2026-11-02"
   },
   "rooms": [
     {
@@ -34,7 +38,7 @@
         ]
       ],
       "floor": "floor.porcelain.bath",
-      "walls": "paint.white.matte",
+      "walls": "tile.wall.satin-white",
       "ceiling": {
         "height": 2.5
       },
@@ -152,14 +156,14 @@
         ],
         [
           4.6,
-          1.8
+          2.2
         ],
         [
-          7.0,
-          1.8
+          7,
+          2.2
         ],
         [
-          7.0,
+          7,
           8.4
         ],
         [
@@ -184,16 +188,16 @@
           0
         ],
         [
-          7.0,
+          7,
           0
         ],
         [
-          7.0,
-          1.8
+          7,
+          2.2
         ],
         [
           4.6,
-          1.8
+          2.2
         ]
       ],
       "floor": "floor.deck.grey",
@@ -234,7 +238,7 @@
       "room": "hall",
       "edge": 3,
       "at": 0.3,
-      "w": 1.0,
+      "w": 1,
       "h": 2.2,
       "est": true
     },
@@ -255,7 +259,7 @@
       "room": "bedroom",
       "edge": 1,
       "at": 0.55,
-      "w": 1.2,
+      "w": 1.6,
       "h": 2.7,
       "sill": 0,
       "frame": "frame.alu.black",
@@ -306,7 +310,7 @@
       "line": [
         [
           0.9,
-          5.0
+          5
         ],
         [
           0.9,
@@ -345,7 +349,11 @@
       "room": "hall",
       "pos": [
         0.8,
-        3.0
+        3.5
+      ],
+      "look": [
+        0.8,
+        0.6
       ]
     },
     {
@@ -354,6 +362,10 @@
       "pos": [
         1.15,
         6.4
+      ],
+      "look": [
+        0.3,
+        4.2
       ]
     },
     {
@@ -362,7 +374,12 @@
       "pos": [
         2.3,
         7.9
-      ]
+      ],
+      "look": [
+        6.5,
+        3.9
+      ],
+      "label": "Dining"
     },
     {
       "id": "hs-living",
@@ -370,7 +387,12 @@
       "pos": [
         4.6,
         5.3
-      ]
+      ],
+      "look": [
+        2.6,
+        7.6
+      ],
+      "label": "Living"
     },
     {
       "id": "hs-window",
@@ -378,7 +400,12 @@
       "pos": [
         4.3,
         4.6
-      ]
+      ],
+      "look": [
+        5.8,
+        2.6
+      ],
+      "label": "Window"
     },
     {
       "id": "hs-bed",
@@ -386,14 +413,22 @@
       "pos": [
         2.6,
         3.2
+      ],
+      "look": [
+        3.6,
+        0.6
       ]
     },
     {
       "id": "hs-bath",
       "room": "bathroom",
       "pos": [
-        0.8,
-        1.5
+        1.0,
+        1.7
+      ],
+      "look": [
+        0.4,
+        0.3
       ]
     },
     {
@@ -402,6 +437,10 @@
       "pos": [
         5.2,
         1.5
+      ],
+      "look": [
+        6.6,
+        -3
       ]
     }
   ],
@@ -416,7 +455,7 @@
       "lookAt": [
         4.3,
         1.15,
-        3.0
+        3
       ],
       "fov": 62,
       "est": true
@@ -424,22 +463,22 @@
     {
       "photo": "01b",
       "pos": [
-        2.2,
-        1.2,
-        3.65
+        1.72,
+        1.0,
+        3.4
       ],
       "lookAt": [
-        3.6,
-        1.0,
-        0.6
+        3.72,
+        1.03,
+        1.16
       ],
-      "fov": 62,
+      "fov": 48.3,
       "est": true
     },
     {
       "photo": "01c",
       "pos": [
-        1.0,
+        1,
         1.35,
         6.4
       ],
@@ -453,12 +492,20 @@
     }
   ],
   "narration": {
-    "_intro": "Welcome to this one-bedroom apartment with open-plan living and a private balcony. Tap the rings on the floor, or use the joystick, to explore.",
+    "_intro": "Welcome to this one-bedroom apartment, with open-plan living, a separate bedroom and a private balcony. Let's start at the front door.",
     "hall": "You're in the entry hall. The bathroom is straight ahead, and the bedroom door is on your right.",
     "kitchen": "The kitchen runs along one wall, with matte greige cabinetry, quartz counters, a speckled stone backsplash, and a full-size sixty-centimetre cooker.",
     "living": "The living and dining room opens up under a higher ceiling. Floor-to-ceiling glazing fills the space with daylight and frames the city view, with room for a four-seat dining table, a three-seat sofa and a lounge chair.",
     "bedroom": "The bedroom fits a queen bed with nightstands on both sides, and has its own sliding door out to the balcony.",
     "bathroom": "The bathroom is compact, with a wall-hung vanity and WC. This room wasn't photographed, so its layout is an estimate.",
     "balcony": "Step out onto the balcony for open skyline views, with space for a bistro table and two chairs."
-  }
+  },
+  "tour": [
+    "hs-hall",
+    "hs-bath",
+    "hs-bed",
+    "hs-balcony",
+    "hs-dining",
+    "hs-kitchen"
+  ]
 }

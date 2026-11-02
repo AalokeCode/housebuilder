@@ -61,7 +61,11 @@ export const useSiteTour = create<SiteTourState>((set, get) => {
     cameraDone: false,
     epoch: 0,
     previewT: 0.5,
-    init: (count) => set({ chapterCount: Math.max(1, count) }),
+    /** full reset per site — no chapter/status/timer carries over between showcases */
+    init: (count) => {
+      clearAdvance();
+      set((s) => ({ status: "idle", chapter: 0, chapterCount: Math.max(1, count), word: -1, speechDone: false, cameraDone: false, epoch: s.epoch + 1, previewT: 0.5 }));
+    },
     start: () => enter(0),
     pause: () => {
       clearAdvance();

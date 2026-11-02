@@ -2,7 +2,6 @@
 
 | id | use | license | author | source |
 |---|---|---|---|---|
-| coffee_table_round_01 | coffee-table.round.glass-black | CC0 | Poly Haven | https://polyhaven.com/a/coffee_table_round_01 |
 | outdoor_table_chair_set_01 | outdoor.bistro-set | CC0 | Poly Haven | https://polyhaven.com/a/outdoor_table_chair_set_01 |
 | pachira_aquatica_01 | plant.potted.medium | CC0 | Poly Haven | https://polyhaven.com/a/pachira_aquatica_01 |
 | ceramic_vase_01 | decor.orchid (TV unit) | CC0 | Poly Haven | https://polyhaven.com/a/ceramic_vase_01 |
@@ -10,5 +9,6 @@
 | american_walnut_veneer | wood | CC0 | Poly Haven | https://polyhaven.com/a/american_walnut_veneer |
 | rough_linen | fabric (bedding, chairs) | CC0 | Poly Haven | https://polyhaven.com/a/rough_linen |
 | poly_wool_herringbone | upholstery (sofa, headboard) | CC0 | Poly Haven | https://polyhaven.com/a/poly_wool_herringbone |
-| sunset_jhbcentral | skyline skybox + environment light | CC0 | Poly Haven | https://polyhaven.com/a/sunset_jhbcentral |
-| bed_trellis | bed.queen.upholstered-grey body | generated with TRELLIS (MIT) from listing photo 01b | this project | public/models/bed_trellis/bed.glb |
+| Fabric032 | boucle (pouf, lounge chair) | CC0 | ambientCG | https://ambientcg.com/view?id=Fabric032 |
+| sunset_jhbcentral | environment light (warm interior grade) | CC0 | Poly Haven | https://polyhaven.com/a/sunset_jhbcentral |
+| shanghai_bund | window view: river skyline skybox (promenade + people removed) | CC0 | Poly Haven | https://polyhaven.com/a/shanghai_bund |

@@ -48,8 +48,8 @@
       "id": "armchair",
       "cat": "armchair.lounge.light-grey",
       "pos": [
-        5.3,
-        2.6
+        5.55,
+        2.95
       ],
       "rotY": -45,
       "est": true
@@ -66,16 +66,16 @@
       "id": "side",
       "cat": "side-table.round.glass-black",
       "pos": [
-        6.25,
-        2.4
+        6.45,
+        2.6
       ]
     },
     {
       "id": "lamp",
       "cat": "lamp.floor.oval-white",
       "pos": [
-        6.72,
-        2.0
+        6.75,
+        3.3
       ]
     },
     {

@@ -1,4 +1,4 @@
-import type { MaterialRef, OpeningKind, PhotoCamSpec, RoomType, Vec2, Vec3 } from "./house-spec";
+import type { HouseMeta, MaterialRef, OpeningKind, PhotoCamSpec, RoomType, Vec2, Vec3 } from "./house-spec";
 import type { Mount } from "./catalog";
 
 export type WallKind = "wall" | "railing" | "bulkhead";
@@ -93,6 +93,8 @@ export interface CompiledHotspot {
   id: string;
   room: string;
   pos: Vec3;
+  look?: Vec2;
+  label?: string;
 }
 
 export interface Collider {
@@ -105,6 +107,9 @@ export interface CompiledHouse {
   slug: string;
   title: string;
   sources: string[];
+  meta: HouseMeta;
+  /** guided-tour hotspot ids, in order */
+  tour: string[];
   rooms: CompiledRoom[];
   walls: CompiledWall[];
   items: CompiledItem[];
@@ -113,6 +118,8 @@ export interface CompiledHouse {
   hotspots: CompiledHotspot[];
   photoCams: PhotoCamSpec[];
   colliders: Collider[];
+  /** furniture / fixture footprints that block walking */
+  obstacles: Vec2[][];
   narration: Record<string, string>;
   bounds: { min: Vec2; max: Vec2 };
 }

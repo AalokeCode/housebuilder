@@ -39,6 +39,9 @@ export function SiteViewer({ site }: { site: CompiledSite }) {
     }
   }, [site, params]);
 
+  // leaving the page: stop timers and pending auto-advance
+  useEffect(() => () => useSiteTour.getState().init(1), []);
+
   useNarrationDriver(site.chapters);
 
   return (

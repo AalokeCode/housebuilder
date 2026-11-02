@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import type { CompiledHouse, CompiledOpening, CompiledWall } from "@/domain/compiled";
@@ -104,16 +105,16 @@ function Opening({ wall, o }: { wall: CompiledWall; o: CompiledOpening }) {
     const f = 0.05;
     return (
       <group position={pos} rotation={[0, theta, 0]}>
-        {/* perimeter */}
-        <mesh position={[0, o.h - f / 2, 0]} material={frame}>
-          <boxGeometry args={[o.w, f, t * 0.6]} />
+        {/* perimeter — overlaps the wall by LAP on every side so no frame face is coplanar with the wall's cut face */}
+        <mesh position={[0, o.h - f / 2 + LAP / 2, 0]} material={frame}>
+          <boxGeometry args={[o.w + 2 * LAP, f + LAP, t * 0.6]} />
         </mesh>
-        <mesh position={[0, f / 2, 0]} material={frame}>
-          <boxGeometry args={[o.w, f, t * 0.6]} />
+        <mesh position={[0, f / 2 - LAP / 2, 0]} material={frame}>
+          <boxGeometry args={[o.w + 2 * LAP, f + LAP, t * 0.6]} />
         </mesh>
         {[-1, 1].map((s) => (
-          <mesh key={s} position={[(s * (o.w - f)) / 2, o.h / 2, 0]} material={frame}>
-            <boxGeometry args={[f, o.h, t * 0.6]} />
+          <mesh key={s} position={[(s * (o.w - f + LAP)) / 2, o.h / 2, 0]} material={frame}>
+            <boxGeometry args={[f + LAP, o.h, t * 0.6]} />
           </mesh>
         ))}
         {/* panels */}
@@ -140,26 +141,75 @@ function Opening({ wall, o }: { wall: CompiledWall; o: CompiledOpening }) {
     );
   }
 
-  // doors: frame + closed leaf + handle
-  const leaf = materials.surface(o.leaf);
+  // doors: frame + hinged leaf (click to open / close)
+  return <Door o={o} pos={pos} theta={theta} t={t} frame={frame} />;
+}
+
+/** Frame overlap into the wall (m) — keeps frame faces off the wall's cut faces (they z-fought). */
+const LAP = 0.01;
+
+function Door({ o, pos, theta, t, frame }: { o: CompiledOpening; pos: [number, number, number]; theta: number; t: number; frame: THREE.Material }) {
+  const leafMat = materials.surface(o.leaf);
+  const handle = materials.color("#222222", 0.3, 0.8);
+  const jamb = 0.05;
+  const leafW = o.w - 0.03;
+  const leafH = o.h - 0.02;
+  // swing: hinge side (left/right as seen from the wall's +z side) and direction (in = +z)
+  const hinge = o.swing?.endsWith("right") ? 1 : -1;
+  const dir = o.swing?.startsWith("out") ? -1 : 1;
+  const [open, setOpen] = useState(false);
+  const leaf = useRef<THREE.Group>(null);
+  const invalidate = useThree((s) => s.invalidate);
+  const [hover, setHover] = useState(false);
+
+  useFrame((_, dt) => {
+    const g = leaf.current;
+    if (!g) return;
+    const target = open ? hinge * dir * -1.6 : 0;
+    const d = target - g.rotation.y;
+    if (Math.abs(d) < 0.001) return;
+    g.rotation.y += d * Math.min(1, dt * 7); // eased swing ≈ 0.5 s
+    invalidate();
+  });
+  useEffect(() => {
+    document.body.style.cursor = hover ? "pointer" : "";
+    return () => void (document.body.style.cursor = "");
+  }, [hover]);
+
   return (
     <group position={pos} rotation={[0, theta, 0]}>
       {[-1, 1].map((s) => (
-        <mesh key={s} position={[(s * (o.w + 0.04)) / 2, o.h / 2, 0]} material={frame}>
-          <boxGeometry args={[0.04, o.h, t + 0.02]} />
+        <mesh key={s} position={[s * (o.w / 2 + jamb / 2 - 0.015), o.h / 2, 0]} material={frame}>
+          <boxGeometry args={[jamb, o.h, t + 0.02]} />
         </mesh>
       ))}
-      <mesh position={[0, o.h + 0.02, 0]} material={frame}>
-        <boxGeometry args={[o.w + 0.08, 0.04, t + 0.02]} />
+      <mesh position={[0, o.h + jamb / 2 - 0.015, 0]} material={frame}>
+        <boxGeometry args={[o.w + 2 * jamb, jamb, t + 0.02]} />
       </mesh>
-      <mesh position={[0, o.h / 2, 0]} material={leaf}>
-        <boxGeometry args={[o.w - 0.01, o.h - 0.01, 0.04]} />
-      </mesh>
-      {[-1, 1].map((s) => (
-        <mesh key={s} position={[o.w / 2 - 0.09, 1.02, s * 0.035]} material={materials.color("#222222", 0.3, 0.8)}>
-          <boxGeometry args={[0.13, 0.02, 0.02]} />
-        </mesh>
-      ))}
+      {/* leaf pivots on its hinge edge */}
+      <group ref={leaf} position={[hinge * (leafW / 2), 0, 0]}>
+        <group position={[-hinge * (leafW / 2), 0, 0]}>
+          <mesh
+            position={[0, leafH / 2 + 0.005, 0]}
+            material={leafMat}
+            onClick={(e) => {
+              if (e.delta > 6) return; // a look-drag, not a click
+              e.stopPropagation();
+              setOpen((v) => !v);
+              invalidate();
+            }}
+            onPointerOver={(e) => (e.stopPropagation(), setHover(true))}
+            onPointerOut={() => setHover(false)}
+          >
+            <boxGeometry args={[leafW, leafH, 0.04]} />
+          </mesh>
+          {[-1, 1].map((s) => (
+            <mesh key={s} position={[-hinge * (leafW / 2 - 0.08), 1.02, s * 0.035]} material={handle}>
+              <boxGeometry args={[0.13, 0.02, 0.02]} />
+            </mesh>
+          ))}
+        </group>
+      </group>
     </group>
   );
 }

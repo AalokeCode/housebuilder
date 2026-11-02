@@ -1,3 +1,4 @@
+import { BODY, walkBlocked } from "./collision";
 import { Catalog, catalog as defaultCatalog } from "./catalog";
 import type { CompiledHouse, CompiledItem, Issue } from "./compiled";
 import { footprint, obbOverlap, pointInPolygon, pointInPolygonOrOnEdge, pointSegment, signedArea } from "./geometry";
@@ -38,6 +39,15 @@ export class HouseValidator {
     }
     for (const k of Object.keys(spec.narration)) {
       if (k !== "_intro" && !spec.rooms.some((r) => r.id === k)) push("error", "narration-room", k, "narration key is not a room id");
+    }
+    for (const h of spec.hotspots) {
+      if (walkBlocked(house, h.pos)) push("error", "hotspot-blocked", h.id, `hotspot is not walkable (furniture or wall within ${BODY} m)`);
+    }
+    for (const id of spec.tour ?? []) {
+      if (!spec.hotspots.some((h) => h.id === id)) push("error", "tour-hotspot", id, "tour stop is not a hotspot id");
+    }
+    for (const h of spec.hotspots) {
+      if (h.look && h.look[0] === h.pos[0] && h.look[1] === h.pos[1]) push("error", "hotspot-look", h.id, "look point equals hotspot position");
     }
     for (const r of spec.rooms) if (!spec.narration[r.id]) push("warn", "narration-missing", r.id, "room has no voice-over line");
     if (opts.photos) {

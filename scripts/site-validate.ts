@@ -2,7 +2,7 @@
  * Usage: pnpm exec tsx scripts/site-validate.ts <slug> [--json]
  * Exit 0 = no errors (warnings allowed). Exit 1 = errors. Exit 2 = usage / not found.
  */
-import { SiteRepository } from "../src/site/server/site-repository";
+import { SiteRepository } from "../src/server/site-repository";
 
 async function main() {
   const args = process.argv.slice(2);

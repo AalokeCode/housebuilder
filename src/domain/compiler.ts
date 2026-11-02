@@ -17,6 +17,7 @@ import {
   dist,
   dot,
   EPS,
+  footprint,
   inwardNormal,
   isConvexVertex,
   keyOf,
@@ -58,6 +59,9 @@ export interface CompileResult {
   issues: Issue[];
 }
 
+/** floor builders you can walk over */
+const WALKABLE = new Set(["rug", "curtain"]);
+
 /**
  * Compiles HouseSpec v1 (+ per-room item files) into renderable geometry.
  * Walls are derived from room polygons: shared edges → interior walls, lone edges → exterior walls.
@@ -85,6 +89,8 @@ export class HouseCompiler {
       slug: spec.slug,
       title: spec.meta.title,
       sources: spec.meta.sources,
+      meta: spec.meta,
+      tour: spec.tour ?? this.defaultTour(),
       rooms,
       walls,
       items,
@@ -93,6 +99,7 @@ export class HouseCompiler {
       hotspots: this.compileHotspots(),
       photoCams: spec.photoCams,
       colliders: this.buildColliders(walls),
+      obstacles: this.buildObstacles(items, fixtures),
       narration: spec.narration,
       bounds: {
         min: [Math.min(...all.map((p) => p[0])), Math.min(...all.map((p) => p[1]))],
@@ -317,6 +324,21 @@ export class HouseCompiler {
     });
   }
 
+  /** Furniture + kitchen runs the walk camera can't pass through (plan footprints). */
+  private buildObstacles(items: CompiledItem[], fixtures: CompiledFixture[]): Vec2[][] {
+    const out: Vec2[][] = [];
+    for (const it of items) {
+      if (it.mount !== "floor" || it.decor || WALKABLE.has(it.builder) || it.size[1] < 0.25) continue;
+      out.push(footprint([it.pos[0], it.pos[2]], it.size[0], it.size[2], it.rotY));
+    }
+    for (const f of fixtures) {
+      const r = (f.rotY * Math.PI) / 180;
+      const depth = 0.6;
+      out.push(footprint([f.origin[0] + Math.sin(r) * depth * 0.5, f.origin[1] + Math.cos(r) * depth * 0.5], f.length, depth, f.rotY));
+    }
+    return out;
+  }
+
   private buildColliders(walls: CompiledWall[]): Collider[] {
     const out: Collider[] = [];
     for (const w of walls) {
@@ -495,7 +517,13 @@ export class HouseCompiler {
   }
 
   private compileHotspots(): CompiledHotspot[] {
-    return this.spec.hotspots.map((h) => ({ id: h.id, room: h.room, pos: [h.pos[0], 0, h.pos[1]] as Vec3 }));
+    return this.spec.hotspots.map((h) => ({ id: h.id, room: h.room, pos: [h.pos[0], 0, h.pos[1]] as Vec3, look: h.look, label: h.label }));
+  }
+
+  /** One stop per room: its first hotspot, in hotspot order. */
+  private defaultTour(): string[] {
+    const seen = new Set<string>();
+    return this.spec.hotspots.filter((h) => !seen.has(h.room) && seen.add(h.room)).map((h) => h.id);
   }
 
   private issue(level: Issue["level"], code: string, where: string, msg: string) {

@@ -8,15 +8,28 @@ export interface Caption {
   word: [number, number] | null;
 }
 
+export interface SpeakOptions {
+  /** speak even if `key` was the last thing spoken */
+  force?: boolean;
+  /** captions only (voice muted / speech unavailable) — paced by a timer */
+  silent?: boolean;
+  /** fires once when the line finished (not when stopped) */
+  onEnd?: () => void;
+}
+
 type Listener = (c: Caption | null) => void;
 
-const WORD_MS = 360;
+const WORD_MS = 380;
+const CLEAR_MS = 900;
 
 export class Narrator {
   private voice: SpeechSynthesisVoice | null = null;
   private lastKey: string | null = null;
   private listeners = new Set<Listener>();
   private timer: ReturnType<typeof setInterval> | null = null;
+  private clearTimer: ReturnType<typeof setTimeout> | null = null;
+  /** bumps on every speak/stop so stale callbacks from a cancelled utterance are ignored */
+  private token = 0;
 
   get supported() {
     return typeof window !== "undefined" && "speechSynthesis" in window;
@@ -38,64 +51,88 @@ export class Narrator {
     this.voice = prefer.map((re) => voices.find((v) => re.test(v.name))).find(Boolean) ?? voices[0] ?? null;
   }
 
-  /** Word ranges for the timer fallback (when boundary events are missing, e.g. some Android voices). */
+  /** Must run inside a user gesture once (iOS keeps speech locked otherwise). */
+  unlock() {
+    if (!this.supported) return;
+    const u = new SpeechSynthesisUtterance(" ");
+    u.volume = 0;
+    window.speechSynthesis.speak(u);
+  }
+
   private words(text: string): [number, number][] {
     return [...text.matchAll(/\S+/g)].map((m) => [m.index!, m.index! + m[0].length]);
   }
 
-  private startFallback(text: string, from = 0) {
-    this.clearTimer();
+  private stopTimers() {
+    if (this.timer) clearInterval(this.timer);
+    if (this.clearTimer) clearTimeout(this.clearTimer);
+    this.timer = null;
+    this.clearTimer = null;
+  }
+
+  private finish(token: number, onEnd?: () => void) {
+    if (token !== this.token) return;
+    this.stopTimers();
+    this.clearTimer = setTimeout(() => token === this.token && this.emit(null), CLEAR_MS);
+    onEnd?.();
+  }
+
+  /** Timer-paced captions: used when muted, unsupported, or boundary events never arrive (some Android voices). */
+  private paced(text: string, token: number, onEnd?: () => void, from = 0) {
+    if (this.timer) clearInterval(this.timer);
     const ws = this.words(text);
     let i = from;
     this.timer = setInterval(() => {
-      if (i >= ws.length) {
-        this.clearTimer();
-        setTimeout(() => this.emit(null), 900);
-        return;
-      }
+      if (token !== this.token) return;
+      if (i >= ws.length) return this.finish(token, onEnd);
       this.emit({ text, word: ws[i++] });
     }, WORD_MS);
   }
 
-  private clearTimer() {
-    if (this.timer) clearInterval(this.timer);
-    this.timer = null;
-  }
-
-  /** Speak `text` once per key (re-entering the same room doesn't repeat). */
-  speak(key: string, text: string, force = false) {
+  /** Speak `text` once per key (re-entering the same room doesn't repeat unless `force`). */
+  speak(key: string, text: string, opts: SpeakOptions = {}) {
     if (!text) return;
-    if (!force && key === this.lastKey) return;
+    if (!opts.force && key === this.lastKey) return;
     this.lastKey = key;
-    this.clearTimer();
+    const token = ++this.token;
+    this.stopTimers();
+    if (this.supported) window.speechSynthesis.cancel();
     this.emit({ text, word: null });
-    if (!this.supported) return this.startFallback(text);
+    if (opts.silent || !this.supported) return this.paced(text, token, opts.onEnd);
 
     this.pickVoice();
-    window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     if (this.voice) u.voice = this.voice;
     u.rate = 0.98;
     let gotBoundary = false;
+    let fellBack = false;
     u.onboundary = (e) => {
-      if (e.name && e.name !== "word") return;
+      if (token !== this.token || fellBack || (e.name && e.name !== "word")) return;
       gotBoundary = true;
       const rest = text.slice(e.charIndex);
       const sp = rest.search(/\s/);
       const end = e.charLength ? e.charIndex + e.charLength : e.charIndex + (sp < 0 ? rest.length : sp);
       this.emit({ text, word: [e.charIndex, end] });
     };
-    u.onstart = () => setTimeout(() => !gotBoundary && this.startFallback(text), 700);
-    u.onend = () => {
-      this.clearTimer();
-      setTimeout(() => this.emit(null), 900);
+    u.onstart = () =>
+      setTimeout(() => {
+        if (token !== this.token || gotBoundary) return;
+        fellBack = true;
+        this.paced(text, token); // captions only; speech end still drives onEnd
+      }, 700);
+    u.onend = () => this.finish(token, opts.onEnd);
+    u.onerror = (e) => {
+      if (token !== this.token || e.error === "interrupted" || e.error === "canceled") return;
+      // blocked (e.g. no gesture yet) → fall back to silent captions so the guided tour keeps moving
+      this.paced(text, token, opts.onEnd);
     };
     window.speechSynthesis.speak(u);
   }
 
   stop() {
+    this.token++;
     if (this.supported) window.speechSynthesis.cancel();
-    this.clearTimer();
+    this.stopTimers();
     this.lastKey = null;
     this.emit(null);
   }

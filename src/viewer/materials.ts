@@ -1,14 +1,17 @@
 import * as THREE from "three";
+import { asset } from "@/assets/asset-url";
 import { catalog } from "@/domain/catalog";
 import type { MaterialRef } from "@/domain/house-spec";
 
 /** Shared material cache — one THREE material per ref, so the GPU sees few programs/draw states. */
-type Weave = "wood" | "fabric" | "weave";
+type Weave = "wood" | "fabric" | "weave" | "boucle";
 
 const TEX: Record<Weave, { dir: string; id: string; diff: boolean; repeat: number; normal: number }> = {
   wood: { dir: "american_walnut_veneer", id: "american_walnut_veneer", diff: true, repeat: 1.5, normal: 0.5 },
   fabric: { dir: "rough_linen", id: "rough_linen", diff: false, repeat: 5, normal: 0.9 },
   weave: { dir: "poly_wool_herringbone", id: "poly_wool_herringbone", diff: false, repeat: 4, normal: 0.8 },
+  // ambientCG (CC0) white wool — reads as bouclé on the pouf / lounge chair
+  boucle: { dir: "Fabric032", id: "Fabric032", diff: false, repeat: 3, normal: 1.2 },
 };
 
 class MaterialFactory {
@@ -21,7 +24,7 @@ class MaterialFactory {
   private image(url: string, srgb: boolean, repeat: number): THREE.Texture {
     const hit = this.textures.get(url);
     if (hit) return hit;
-    const t = this.loader!.load(url, () => this.onLoad());
+    const t = this.loader!.load(asset(url), () => this.onLoad());
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(repeat, repeat);
     t.anisotropy = 4;

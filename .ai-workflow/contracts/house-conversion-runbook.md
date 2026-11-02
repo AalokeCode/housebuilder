@@ -253,7 +253,8 @@ For every photo write an entry to `work/photo-index.json`:
 1. Read only your room's photo-index entries; view only that room's photos.
 2. Place items with `against` where an item backs onto a wall; `pos` otherwise. Respect clearances: walkways ≥ 0.8 m, door swing clear, bed sides ≥ 0.5 m.
 3. Match catalog via grep; placeholders when no match.
-4. `pnpm house:validate <slug> --room <roomId>` (checks: items inside room, no wall penetration, no overlap > 5 cm, door swings clear).
+4. `pnpm house:validate <slug> --room <roomId>` (checks: items inside room, no overlap > 5 cm, hotspots walkable — not inside furniture or within 0.22 m of a wall/furniture edge).
+   **Not checked automatically — verify by eye in the dollhouse view:** door swing clearance, walkway widths (≥ 0.8 m), bed side clearance, wall penetration by items.
 - **Gate:** validate clean per room.
 
 ### Stage 6 — Merge & full validate (orchestrator)
@@ -261,7 +262,7 @@ For every photo write an entry to `work/photo-index.json`:
 
 ### Stage 7 — Visual verification (orchestrator, Chrome DevTools MCP)
 1. Use the running dev server if one exists (check `lsof -iTCP -sTCP:LISTEN | grep next`), else `pnpm house:preview <slug> --port 3210`. URL: `/preview/<slug>?cam=<photoId>&clean=1` (`clean=1` hides UI so the frame is comparable).
-2. Fresh DevTools page (per global rules), `resize_page` to the reference photo's pixel size (e.g. 1000×495). For each photo: navigate, wait ~4 s for textures/GLBs (`evaluate_script` with a timeout), `take_screenshot` → `shots/<id>.png`.
+2. Fresh DevTools page (per global rules), `resize_page` to the reference photo's pixel size (e.g. 1000×495). For each photo: navigate to `/preview/<slug>?cam=<id>&clean=1`, wait for the scene-ready signal (`evaluate_script` polling `document.querySelector('[data-tour-ready="true"]')`, ≤ 25 s), `take_screenshot` → `shots/<id>.png`.
 3. Compare screenshot vs reference side by side. Checklist per photo:
    - [ ] Wall/glazing positions line up (±10 % of frame)
    - [ ] Major furniture in the right place and facing the right way
@@ -295,9 +296,14 @@ Sources: photos (n) | plan | video   ·   Scale method: <priors used / area fact
 
 | Feature | How |
 |---|---|
-| Artwork / patterned textiles | Crop from the reference photo into `public/houses/<slug>/*.jpg` (perspective-correct with PIL `Image.QUAD` if shot at an angle) and set the item's `"image": "/houses/<slug>/x.jpg"`. Works for `art.*` and `bed.*` (cushions). |
+| Artwork / patterned textiles / rugs | **Copy exactly from the photo.** Crop into `public/houses/<slug>/*.jpg` (perspective-correct with PIL `Image.QUAD` if shot at an angle; keep only the object — no legs/edges of neighbours) and set the item's `"image": "/houses/<slug>/x.jpg"`. Works for `art.*`, `bed.*` (cushions) and `rug.*`. |
 | Voice-over | Top-level `"narration": { "_intro": "...", "<roomId>": "..." }` — 1–3 sentences per room, warm real-estate tone, flag estimated rooms honestly. Validator warns on rooms without a line. Subtitles are generated automatically (line-by-line). |
-| Free 3D models | Add to `scripts/fetch-assets.ts` manifest (Poly Haven CC0 preferred), `pnpm assets:fetch <id>`, then set `"model"` on the catalog entry. Procedural builder stays as fallback. Reject models whose colour/style contradicts the photo. |
+| Free 3D models | Add to `scripts/fetch-assets.ts` (`polyhaven` · `url` (Smithsonian CC0, Khronos) · `zip` (Kenney / Quaternius CC0 packs) · `sketchfab` (CC0/CC-BY, `SKETCHFAB_TOKEN` inline)), `pnpm assets:fetch <id>` (auto-packs to meshopt GLB), then set `"model": "/models/<id>/<id>.glb"`. Textures: Poly Haven or ambientCG (`source: "ambientcg"`). Procedural builder stays as fallback. Reject models whose colour/style contradicts the photo. |
+| Guided tour | `"tour": [hotspot ids]` = stop order (default: first hotspot per room). Give each stop hotspot a `"look": [x, z]` so the camera frames what the narration describes; `"label"` renames a chip. Stops must be walkable (validator). |
+| Cover / share | `meta.summary` (≤ 240 chars), `meta.locality`, optional `meta.cta {label, href}` (host listing / enquiry page). |
+| Publishing | Leave `meta.status: "draft"`. Only after human approval: `pnpm house:publish <slug> --cover <photoId>` (exports photos + OG, sets published). |
+| Photo-match cameras | Solve, don't guess: `python3 scripts/camera/solve-camera.py houses/<slug>/work/cam-<id>.json` (6–8 structural point pairs + a bounds box). RMS ≤ 20 px = pass; a single large residual points at a mis-sized element; non-convergence means the layout is wrong → ask for a plan. |
+| Window view | Image skybox only (`scripts/skybox/build-skyline.py`), aimed at the main glazing via `SKYLINE_YAW`. |
 | Ceiling heights | Set per room; open-plan edges between different heights render a bulkhead automatically. |
 
 ## 7. Definition of done
@@ -305,9 +311,11 @@ Sources: photos (n) | plan | video   ·   Scale method: <priors used / area fact
 - [ ] Every reference photo has a `photoCams` entry and a screenshot in `shots/`
 - [ ] Every non-observed value marked `"est": true`
 - [ ] Every placeholder listed in report
-- [ ] Every room has a `narration` line
+- [ ] Every room has a `narration` line; every guided stop has a `look`
+- [ ] Patterned surfaces (art, rugs, cushions) use photo crops, not procedural patterns
 - [ ] `report.md` complete with open questions
-- [ ] No files written outside `houses/<slug>/`
+- [ ] No files written outside `houses/<slug>/` and `public/houses/<slug>/` (plus catalog / fetch-assets for new models — mention in report)
+- [ ] Status left as `draft` unless the human approved publishing
 
 ## 8. Efficiency rules
 - View each reference image **once** (Stage 2). After that, use `photo-index.json`. Workers view only their room's images.

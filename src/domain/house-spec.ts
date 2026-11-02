@@ -103,7 +103,15 @@ export const LightSpec = z.object({
 });
 export type LightSpec = z.infer<typeof LightSpec>;
 
-export const HotspotSpec = z.object({ id: Id, room: Id, pos: Vec2 });
+export const HotspotSpec = z.object({
+  id: Id,
+  room: Id,
+  pos: Vec2,
+  /** plan point the guided tour faces at this stop (default: room centre / longest view) */
+  look: Vec2.optional(),
+  /** buyer-facing label for the chip (default: room name) */
+  label: z.string().min(1).optional(),
+});
 export type HotspotSpec = z.infer<typeof HotspotSpec>;
 
 export const PhotoCamSpec = z.object({
@@ -121,7 +129,17 @@ export const HouseMeta = z.object({
   ceiling: z.number().positive(),
   sources: z.array(z.enum(["photos", "plan", "video"])).min(1),
   areaBrief: z.number().positive().nullable().optional(),
+  /** draft = only on /preview; published = public /tour */
+  status: z.enum(["draft", "published"]).default("draft"),
+  /** one-sentence cover / share description */
+  summary: z.string().max(240).optional(),
+  locality: z.string().optional(),
+  /** ISO date the model was last reviewed */
+  reviewed: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD").optional(),
+  /** hand-off to the host listing / enquiry page (the tour module has no lead capture) */
+  cta: z.object({ label: z.string().min(1).max(40), href: z.string().min(1) }).optional(),
 });
+export type HouseMeta = z.infer<typeof HouseMeta>;
 
 export const HouseSpec = z.object({
   spec: z.literal("housespec/1"),
@@ -136,6 +154,8 @@ export const HouseSpec = z.object({
   photoCams: z.array(PhotoCamSpec).default([]),
   /** voice-over script: room id → text. `_intro` plays on start. */
   narration: z.record(z.string(), z.string()).default({}),
+  /** guided-tour order as hotspot ids (default: first hotspot of each room, in hotspot order) */
+  tour: z.array(Id).optional(),
 });
 export type HouseSpec = z.infer<typeof HouseSpec>;
 

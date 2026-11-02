@@ -1,6 +1,7 @@
 "use client";
 
-import { Move3d, Pause, Play, RotateCcw, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, Move3d, Pause, Play, RotateCcw, SkipBack, SkipForward, Volume2, VolumeX } from "lucide-react";
 import { useEffect } from "react";
 import type { CompiledSite } from "@/domain/site-compiler";
 import { useSiteTour } from "../store";
@@ -83,8 +84,11 @@ export function Overlay({ site }: { site: CompiledSite }) {
   return (
     <div className="pointer-events-none absolute inset-0 flex flex-col justify-between text-white">
       {/* header */}
-      <header className="flex items-start justify-between gap-3 p-3 sm:p-5">
-        <div className="pointer-events-auto rounded-2xl bg-black/40 px-4 py-2.5 backdrop-blur-md">
+      <header className="flex items-start justify-between gap-3 p-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:p-5">
+        <Link href="/" className={`${btn} pointer-events-auto h-11 w-11 shrink-0 bg-black/40 backdrop-blur-md`} aria-label="All tours">
+          <ArrowLeft className="h-5 w-5" />
+        </Link>
+        <div className="pointer-events-auto mr-auto min-w-0 rounded-2xl bg-black/40 px-4 py-2.5 backdrop-blur-md">
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-amber-300/90">Drone showcase</p>
           <h1 className="text-base font-semibold leading-tight sm:text-lg">{site.meta.title}</h1>
           {site.meta.location && <p className="text-xs text-white/70">{site.meta.location}</p>}
