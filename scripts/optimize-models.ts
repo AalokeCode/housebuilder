@@ -3,10 +3,13 @@
  * meshopt geometry compression + WebP textures (≤ 1024 px). Sources (.gltf/.bin/textures) are removed
  * afterwards — `pnpm assets:fetch` re-downloads them.
  *
+ * Also re-encodes the PBR detail maps in public/textures (mozjpeg q90, 4:4:4 so normal maps keep chroma):
+ * Poly Haven / ambientCG ship them near-lossless (~1 MB per 1k map). Marked via EXIF, so reruns skip them.
+ *
  * Usage: pnpm assets:optimize [<id> ...]
  * Then point the catalog at /models/<id>/<id>.glb (already done for the fetched set).
  */
-import { readdir, rm, stat } from "node:fs/promises";
+import { readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { NodeIO } from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
@@ -15,6 +18,25 @@ import { MeshoptDecoder, MeshoptEncoder } from "meshoptimizer";
 import sharp from "sharp";
 
 const ROOT = path.join(process.cwd(), "public", "models");
+const TEXTURES = path.join(process.cwd(), "public", "textures");
+const MARK = "3dhouse-q90";
+
+async function optimizeTextures() {
+  for (const e of await readdir(TEXTURES, { recursive: true })) {
+    if (!e.endsWith(".jpg")) continue;
+    const file = path.join(TEXTURES, e);
+    const src = await readFile(file);
+    const meta = await sharp(src).metadata();
+    if (meta.exif?.includes(MARK)) continue;
+    const out = await (meta.channels === 1 ? sharp(src).toColourspace("b-w") : sharp(src))
+      .jpeg({ quality: 90, mozjpeg: true, chromaSubsampling: "4:4:4" })
+      .withExif({ IFD0: { Software: MARK } })
+      .toBuffer();
+    if (out.length >= src.length) continue;
+    await writeFile(file, out);
+    console.log(`✓ ${e}: ${(src.length / 1e3) | 0} KB → ${(out.length / 1e3) | 0} KB`);
+  }
+}
 
 async function size(p: string): Promise<number> {
   const s = await stat(p);
@@ -57,6 +79,7 @@ async function main() {
   const want = process.argv.slice(2);
   const ids = (await readdir(ROOT, { withFileTypes: true })).filter((e) => e.isDirectory() && (!want.length || want.includes(e.name))).map((e) => e.name);
   for (const id of ids) await optimize(id, io);
+  if (!want.length) await optimizeTextures();
 }
 
 main().catch((e) => {
