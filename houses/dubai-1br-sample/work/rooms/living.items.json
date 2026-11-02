@@ -1,0 +1,215 @@
+{
+  "room": "living",
+  "items": [
+    {
+      "id": "tv-unit",
+      "cat": "tv-unit.low.white",
+      "against": {
+        "edge": 0,
+        "at": 1.55
+      }
+    },
+    {
+      "id": "tv",
+      "cat": "tv.55",
+      "against": {
+        "edge": 0,
+        "at": 1.55
+      },
+      "gap": 0.1,
+      "y": 0.45
+    },
+    {
+      "id": "mirror",
+      "cat": "mirror.floor.lean",
+      "against": {
+        "edge": 0,
+        "at": 2.65
+      },
+      "gap": 0.02
+    },
+    {
+      "id": "plant",
+      "cat": "plant.potted.medium",
+      "pos": [
+        4.95,
+        3.45
+      ]
+    },
+    {
+      "id": "sofa",
+      "cat": "sofa.3seat.channel-grey",
+      "against": {
+        "edge": 3,
+        "at": 2.9
+      }
+    },
+    {
+      "id": "armchair",
+      "cat": "armchair.lounge.light-grey",
+      "pos": [
+        5.3,
+        2.6
+      ],
+      "rotY": -45,
+      "est": true
+    },
+    {
+      "id": "coffee",
+      "cat": "coffee-table.round.glass-black",
+      "pos": [
+        5.5,
+        4.3
+      ]
+    },
+    {
+      "id": "side",
+      "cat": "side-table.round.glass-black",
+      "pos": [
+        6.25,
+        2.4
+      ]
+    },
+    {
+      "id": "lamp",
+      "cat": "lamp.floor.oval-white",
+      "pos": [
+        6.72,
+        2.0
+      ]
+    },
+    {
+      "id": "pouf",
+      "cat": "pouf.round.boucle",
+      "pos": [
+        5.75,
+        6.2
+      ]
+    },
+    {
+      "id": "table",
+      "cat": "dining-table.round.walnut",
+      "pos": [
+        3.1,
+        6.6
+      ]
+    },
+    {
+      "id": "chair-n",
+      "cat": "dining-chair.upholstered.cream",
+      "pos": [
+        3.1,
+        5.82
+      ],
+      "rotY": 0
+    },
+    {
+      "id": "chair-s",
+      "cat": "dining-chair.upholstered.cream",
+      "pos": [
+        3.1,
+        7.38
+      ],
+      "rotY": 180
+    },
+    {
+      "id": "chair-w",
+      "cat": "dining-chair.upholstered.cream",
+      "pos": [
+        2.32,
+        6.6
+      ],
+      "rotY": 90
+    },
+    {
+      "id": "chair-e",
+      "cat": "dining-chair.upholstered.cream",
+      "pos": [
+        3.88,
+        6.6
+      ],
+      "rotY": 270
+    }
+  ],
+  "decor": [
+    {
+      "id": "rug",
+      "cat": "rug.rect.grey-marble",
+      "pos": [
+        5.7,
+        4.5
+      ],
+      "rotY": 90
+    },
+    {
+      "id": "orchid-tv",
+      "cat": "decor.orchid",
+      "pos": [
+        2.7,
+        4.07
+      ],
+      "y": 0.45
+    },
+    {
+      "id": "orchid-table",
+      "cat": "decor.orchid.bowl",
+      "pos": [
+        3.1,
+        6.6
+      ],
+      "y": 0.75
+    },
+    {
+      "id": "art-sofa",
+      "cat": "art.frame.abstract-grey",
+      "against": {
+        "edge": 3,
+        "at": 2.9
+      },
+      "y": 1.65,
+      "image": "/houses/dubai-1br-sample/art-sofa.jpg"
+    },
+    {
+      "id": "art-east",
+      "cat": "art.frame.abstract-dark",
+      "against": {
+        "edge": 3,
+        "at": 5.2
+      },
+      "y": 1.6,
+      "est": true
+    },
+    {
+      "id": "art-south",
+      "cat": "art.frame.lines-beige",
+      "against": {
+        "edge": 4,
+        "at": 2.6
+      },
+      "y": 1.6,
+      "image": "/houses/dubai-1br-sample/art-lines-beige.jpg"
+    },
+    {
+      "id": "curtain-e",
+      "cat": "curtain.sheer.grey",
+      "against": {
+        "edge": 2,
+        "at": 1.95
+      },
+      "gap": 0.05,
+      "size": [
+        0.9,
+        2.65,
+        0.14
+      ]
+    },
+    {
+      "id": "pendant",
+      "cat": "light.pendant.glass-globe-3",
+      "pos": [
+        5.5,
+        3.0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "room": "bedroom",
+  "items": [
+    {
+      "id": "bed",
+      "cat": "bed.queen.upholstered-grey",
+      "against": {
+        "edge": 0,
+        "at": 1.5
+      },
+      "image": "/houses/dubai-1br-sample/cushion-damask.jpg"
+    },
+    {
+      "id": "ns-l",
+      "cat": "nightstand.walnut",
+      "against": {
+        "edge": 0,
+        "at": 0.33
+      }
+    },
+    {
+      "id": "ns-r",
+      "cat": "nightstand.walnut",
+      "against": {
+        "edge": 0,
+        "at": 2.67
+      }
+    },
+    {
+      "id": "lamp-l",
+      "cat": "lamp.table.brass-disc",
+      "against": {
+        "edge": 0,
+        "at": 0.33
+      },
+      "gap": 0.06,
+      "y": 0.55
+    },
+    {
+      "id": "lamp-r",
+      "cat": "lamp.table.brass-disc",
+      "against": {
+        "edge": 0,
+        "at": 2.67
+      },
+      "gap": 0.06,
+      "y": 0.55
+    },
+    {
+      "id": "dresser",
+      "cat": "dresser.low.white",
+      "against": {
+        "edge": 1,
+        "at": 3.2
+      },
+      "est": true
+    }
+  ],
+  "decor": [
+    {
+      "id": "rug",
+      "cat": "rug.organic.grey",
+      "pos": [
+        3.1,
+        2.4
+      ]
+    },
+    {
+      "id": "art",
+      "cat": "art.frame.strokes-blue",
+      "against": {
+        "edge": 0,
+        "at": 1.5
+      },
+      "y": 1.7,
+      "image": "/houses/dubai-1br-sample/art-strokes-blue.jpg"
+    },
+    {
+      "id": "vase",
+      "cat": "decor.vase.peonies",
+      "against": {
+        "edge": 1,
+        "at": 3.0
+      },
+      "gap": 0.05,
+      "y": 0.8
+    },
+    {
+      "id": "curtain",
+      "cat": "curtain.sheer.grey",
+      "against": {
+        "edge": 1,
+        "at": 2.1
+      },
+      "gap": 0.05,
+      "size": [
+        0.6,
+        2.65,
+        0.14
+      ]
+    }
+  ]
+}

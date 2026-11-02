@@ -1,0 +1,66 @@
+[
+  {
+    "id": "01a",
+    "rooms": ["kitchen", "hall", "living"],
+    "camera": { "standingIn": "living (south-west, by dining)", "facing": "N-NE", "height": "eye ~1.35", "lens": "wide ~16mm" },
+    "visibleWalls": [
+      { "room": "kitchen", "desc": "single-run kitchen on west wall: greige matte base + upper cabinets, speckled beige splash + quartz top, 60 cm steel cooker, slim hood" },
+      { "room": "hall", "desc": "dropped ceiling corridor north of kitchen; door at end (→ bathroom), door on east side (→ bedroom)" },
+      { "room": "living", "desc": "TV wall (south face of bedroom) with low white TV unit, 55in TV, leaning floor mirror, potted plant; full-height black-frame glazing w/ slider to balcony further north-east; grey sheer curtains on east end" },
+      { "room": "living", "desc": "east wall: portrait dark abstract art, grey channel sofa against it" }
+    ],
+    "objects": [
+      { "what": "round walnut dining table + 4 cream upholstered chairs with walnut legs, place settings, orchid centerpiece", "room": "living", "approxPos": "center-left foreground" },
+      { "what": "3-seat channel-tufted light grey sofa, dark cushions, throw", "room": "living", "approxPos": "right foreground, back to east wall" },
+      { "what": "light grey lounge armchair facing room, near glazing", "room": "living", "approxPos": "center right, far" },
+      { "what": "two round dark-glass tables (coffee + side)", "room": "living", "approxPos": "center right" },
+      { "what": "white oval floor lamp", "room": "living", "approxPos": "NE corner by curtains" },
+      { "what": "boucle round pouf", "room": "living", "approxPos": "right foreground" },
+      { "what": "grey marble-pattern rug", "room": "living", "approxPos": "under coffee tables" },
+      { "what": "3-globe pendant", "room": "living", "approxPos": "ceiling above armchair/coffee" },
+      { "what": "bistro table + 2 chairs", "room": "balcony", "approxPos": "outside glazing" }
+    ],
+    "materials": {
+      "floor": "large-format light grey porcelain ~60x120 (#e4e3df), continuous through kitchen",
+      "walls": "white matte",
+      "ceiling": "white; dropped 2.5 m over kitchen/hall with linear AC diffuser; 2.7 m in living; recessed downlights"
+    },
+    "scaleClues": ["hall doors ~2.1 m → living ceiling ≈ 2.7 m, kitchen bulkhead ≈ 2.5 m", "cooker 0.6 m wide", "sofa ≈ 2.3 m", "dining table Ø ≈ 1.0 m"],
+    "adjacency": ["kitchen open to living (bulkhead step)", "kitchen continues into hall corridor", "living glazing opens to balcony"]
+  },
+  {
+    "id": "01b",
+    "rooms": ["bedroom", "balcony"],
+    "camera": { "standingIn": "bedroom (south-west)", "facing": "N-NE", "height": "~1.2", "lens": "wide ~18mm" },
+    "visibleWalls": [
+      { "room": "bedroom", "desc": "north wall: queen bed with grey upholstered headboard, blue strokes artwork ~1.7 m wide above" },
+      { "room": "bedroom", "desc": "right side: full-height black-frame slider to balcony, grey curtains" }
+    ],
+    "objects": [
+      { "what": "queen bed, white linen, blue throw, patterned grey/blue cushions, folded towels", "room": "bedroom", "approxPos": "center-left" },
+      { "what": "walnut nightstands both sides, brass disc table lamps", "room": "bedroom", "approxPos": "beside bed" },
+      { "what": "low white dresser with glass vase of yellow peonies + orchid sprays", "room": "bedroom", "approxPos": "right foreground" },
+      { "what": "organic grey rug", "room": "bedroom", "approxPos": "under bed foot" }
+    ],
+    "materials": { "floor": "same light grey porcelain", "walls": "white matte", "ceiling": "white, flush dome light" },
+    "scaleClues": ["queen bed 1.6 m mattress → headboard ≈ 1.75 m", "nightstand ≈ 0.5 m"],
+    "adjacency": ["bedroom slider opens to the same balcony as living (shared tower view)"]
+  },
+  {
+    "id": "01c",
+    "rooms": ["living"],
+    "camera": { "standingIn": "living west edge (by kitchen bulkhead)", "facing": "E", "height": "eye ~1.35", "lens": "wide ~16mm" },
+    "visibleWalls": [
+      { "room": "living", "desc": "left (north): glazing + slider to balcony with bistro set, sheer grey curtains" },
+      { "room": "living", "desc": "far (east): sofa against wall, landscape grey abstract art above" },
+      { "room": "living", "desc": "right (south): portrait beige line-pattern art" }
+    ],
+    "objects": [
+      { "what": "same dining set as 01a (foreground right)", "room": "living", "approxPos": "foreground right" },
+      { "what": "walnut low sideboard with orchids (left foreground)", "room": "living", "approxPos": "north wall near camera — CONFLICT: 01a shows white TV unit here" }
+    ],
+    "materials": { "floor": "same", "walls": "white", "ceiling": "linear diffuser visible right" },
+    "scaleClues": ["dining chair back ≈ 0.9 m"],
+    "adjacency": ["confirms sofa on east wall, glazing on north"]
+  }
+]

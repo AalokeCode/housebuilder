@@ -1,0 +1,5 @@
+{
+  "room": "balcony",
+  "items": [{ "id": "bistro", "cat": "outdoor.bistro-set", "pos": [5.8, 0.85] }],
+  "decor": []
+}

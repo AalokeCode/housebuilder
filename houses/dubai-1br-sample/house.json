@@ -1,0 +1,464 @@
+{
+  "spec": "housespec/1",
+  "slug": "dubai-1br-sample",
+  "meta": {
+    "title": "1BR Apartment \u2014 Sample (Dubai)",
+    "kind": "apartment",
+    "ceiling": 2.7,
+    "sources": [
+      "photos"
+    ],
+    "areaBrief": null
+  },
+  "rooms": [
+    {
+      "id": "bathroom",
+      "type": "bathroom",
+      "name": "Bathroom",
+      "poly": [
+        [
+          0,
+          0
+        ],
+        [
+          1.6,
+          0
+        ],
+        [
+          1.6,
+          2.2
+        ],
+        [
+          0,
+          2.2
+        ]
+      ],
+      "floor": "floor.porcelain.bath",
+      "walls": "paint.white.matte",
+      "ceiling": {
+        "height": 2.5
+      },
+      "est": true
+    },
+    {
+      "id": "hall",
+      "type": "hall",
+      "name": "Entry Hall",
+      "poly": [
+        [
+          0,
+          2.2
+        ],
+        [
+          1.6,
+          2.2
+        ],
+        [
+          1.6,
+          3.8
+        ],
+        [
+          0,
+          3.8
+        ]
+      ],
+      "floor": "floor.porcelain.light-grey",
+      "walls": "paint.white.matte",
+      "ceiling": {
+        "height": 2.5
+      },
+      "openTo": [
+        "kitchen"
+      ],
+      "est": true
+    },
+    {
+      "id": "bedroom",
+      "type": "bedroom",
+      "name": "Bedroom",
+      "poly": [
+        [
+          1.6,
+          0
+        ],
+        [
+          4.6,
+          0
+        ],
+        [
+          4.6,
+          3.8
+        ],
+        [
+          1.6,
+          3.8
+        ]
+      ],
+      "floor": "floor.porcelain.light-grey",
+      "walls": "paint.white.matte",
+      "ceiling": {
+        "height": 2.7
+      },
+      "est": true
+    },
+    {
+      "id": "kitchen",
+      "type": "kitchen",
+      "name": "Kitchen",
+      "poly": [
+        [
+          0,
+          3.8
+        ],
+        [
+          1.6,
+          3.8
+        ],
+        [
+          1.6,
+          8.4
+        ],
+        [
+          0,
+          8.4
+        ]
+      ],
+      "floor": "floor.porcelain.light-grey",
+      "walls": "paint.white.matte",
+      "ceiling": {
+        "height": 2.5,
+        "features": [
+          "linear-diffuser"
+        ]
+      },
+      "openTo": [
+        "living",
+        "hall"
+      ],
+      "est": true
+    },
+    {
+      "id": "living",
+      "type": "living",
+      "name": "Living / Dining",
+      "poly": [
+        [
+          1.6,
+          3.8
+        ],
+        [
+          4.6,
+          3.8
+        ],
+        [
+          4.6,
+          1.8
+        ],
+        [
+          7.0,
+          1.8
+        ],
+        [
+          7.0,
+          8.4
+        ],
+        [
+          1.6,
+          8.4
+        ]
+      ],
+      "floor": "floor.porcelain.light-grey",
+      "walls": "paint.white.matte",
+      "ceiling": {
+        "height": 2.7
+      },
+      "est": true
+    },
+    {
+      "id": "balcony",
+      "type": "balcony",
+      "name": "Balcony",
+      "poly": [
+        [
+          4.6,
+          0
+        ],
+        [
+          7.0,
+          0
+        ],
+        [
+          7.0,
+          1.8
+        ],
+        [
+          4.6,
+          1.8
+        ]
+      ],
+      "floor": "floor.deck.grey",
+      "walls": "paint.white.matte",
+      "est": true
+    }
+  ],
+  "openings": [
+    {
+      "id": "d-bath",
+      "kind": "door",
+      "between": [
+        "hall",
+        "bathroom"
+      ],
+      "at": 0.4,
+      "w": 0.8,
+      "h": 2.1,
+      "swing": "in-left",
+      "est": true
+    },
+    {
+      "id": "d-bed",
+      "kind": "door",
+      "between": [
+        "hall",
+        "bedroom"
+      ],
+      "at": 0.4,
+      "w": 0.9,
+      "h": 2.1,
+      "swing": "in-right",
+      "est": true
+    },
+    {
+      "id": "d-entry",
+      "kind": "entrance",
+      "room": "hall",
+      "edge": 3,
+      "at": 0.3,
+      "w": 1.0,
+      "h": 2.2,
+      "est": true
+    },
+    {
+      "id": "g-living",
+      "kind": "slider",
+      "room": "living",
+      "edge": 2,
+      "at": 0.12,
+      "w": 2.2,
+      "h": 2.7,
+      "sill": 0,
+      "frame": "frame.alu.black"
+    },
+    {
+      "id": "g-bed",
+      "kind": "slider",
+      "room": "bedroom",
+      "edge": 1,
+      "at": 0.55,
+      "w": 1.2,
+      "h": 2.7,
+      "sill": 0,
+      "frame": "frame.alu.black",
+      "est": true
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "kitchen-run",
+      "kind": "kitchen",
+      "room": "kitchen",
+      "edge": 3,
+      "from": 0.3,
+      "to": 3.9,
+      "base": "cab.matte.greige",
+      "top": "counter.quartz.speckled-beige",
+      "upper": "cab.matte.greige",
+      "splash": "tile.speckled-beige",
+      "appliances": [
+        {
+          "cat": "appliance.cooker.60.steel",
+          "at": 1.2
+        }
+      ]
+    }
+  ],
+  "items": "work/rooms/*.items.json",
+  "lights": [
+    {
+      "room": "living",
+      "kind": "downlight",
+      "grid": [
+        2,
+        3
+      ]
+    },
+    {
+      "room": "kitchen",
+      "kind": "downlight",
+      "grid": [
+        1,
+        3
+      ]
+    },
+    {
+      "room": "kitchen",
+      "kind": "linear",
+      "line": [
+        [
+          0.9,
+          5.0
+        ],
+        [
+          0.9,
+          6.6
+        ]
+      ]
+    },
+    {
+      "room": "hall",
+      "kind": "downlight",
+      "grid": [
+        1,
+        1
+      ]
+    },
+    {
+      "room": "bedroom",
+      "kind": "downlight",
+      "grid": [
+        1,
+        2
+      ]
+    },
+    {
+      "room": "bathroom",
+      "kind": "downlight",
+      "grid": [
+        1,
+        1
+      ]
+    }
+  ],
+  "hotspots": [
+    {
+      "id": "hs-hall",
+      "room": "hall",
+      "pos": [
+        0.8,
+        3.0
+      ]
+    },
+    {
+      "id": "hs-kitchen",
+      "room": "kitchen",
+      "pos": [
+        1.15,
+        6.4
+      ]
+    },
+    {
+      "id": "hs-dining",
+      "room": "living",
+      "pos": [
+        2.3,
+        7.9
+      ]
+    },
+    {
+      "id": "hs-living",
+      "room": "living",
+      "pos": [
+        4.6,
+        5.3
+      ]
+    },
+    {
+      "id": "hs-window",
+      "room": "living",
+      "pos": [
+        4.3,
+        4.6
+      ]
+    },
+    {
+      "id": "hs-bed",
+      "room": "bedroom",
+      "pos": [
+        2.6,
+        3.2
+      ]
+    },
+    {
+      "id": "hs-bath",
+      "room": "bathroom",
+      "pos": [
+        0.8,
+        1.5
+      ]
+    },
+    {
+      "id": "hs-balcony",
+      "room": "balcony",
+      "pos": [
+        5.2,
+        1.5
+      ]
+    }
+  ],
+  "photoCams": [
+    {
+      "photo": "01a",
+      "pos": [
+        1.85,
+        1.3,
+        8.3
+      ],
+      "lookAt": [
+        4.3,
+        1.15,
+        3.0
+      ],
+      "fov": 62,
+      "est": true
+    },
+    {
+      "photo": "01b",
+      "pos": [
+        2.2,
+        1.2,
+        3.65
+      ],
+      "lookAt": [
+        3.6,
+        1.0,
+        0.6
+      ],
+      "fov": 62,
+      "est": true
+    },
+    {
+      "photo": "01c",
+      "pos": [
+        1.0,
+        1.35,
+        6.4
+      ],
+      "lookAt": [
+        6.5,
+        1.1,
+        3.9
+      ],
+      "fov": 62,
+      "est": true
+    }
+  ],
+  "narration": {
+    "_intro": "Welcome to this one-bedroom apartment with open-plan living and a private balcony. Tap the rings on the floor, or use the joystick, to explore.",
+    "hall": "You're in the entry hall. The bathroom is straight ahead, and the bedroom door is on your right.",
+    "kitchen": "The kitchen runs along one wall, with matte greige cabinetry, quartz counters, a speckled stone backsplash, and a full-size sixty-centimetre cooker.",
+    "living": "The living and dining room opens up under a higher ceiling. Floor-to-ceiling glazing fills the space with daylight and frames the city view, with room for a four-seat dining table, a three-seat sofa and a lounge chair.",
+    "bedroom": "The bedroom fits a queen bed with nightstands on both sides, and has its own sliding door out to the balcony.",
+    "bathroom": "The bathroom is compact, with a wall-hung vanity and WC. This room wasn't photographed, so its layout is an estimate.",
+    "balcony": "Step out onto the balcony for open skyline views, with space for a bistro table and two chairs."
+  }
+}

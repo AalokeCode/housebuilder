@@ -1,0 +1,8 @@
+{
+  "room": "bathroom",
+  "items": [
+    { "id": "vanity", "cat": "placeholder.vanity", "against": { "edge": 0, "at": 1.1 }, "size": [0.8, 0.85, 0.5], "color": "#d9d4cc", "note": "unseen — wall-hung vanity w/ basin", "est": true },
+    { "id": "wc", "cat": "placeholder.wc", "against": { "edge": 3, "at": 1.0 }, "size": [0.4, 0.8, 0.65], "color": "#f4f4f2", "note": "unseen — wall-hung WC", "est": true }
+  ],
+  "decor": []
+}
