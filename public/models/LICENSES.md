@@ -11,3 +11,4 @@
 | rough_linen | fabric (bedding, chairs) | CC0 | Poly Haven | https://polyhaven.com/a/rough_linen |
 | poly_wool_herringbone | upholstery (sofa, headboard) | CC0 | Poly Haven | https://polyhaven.com/a/poly_wool_herringbone |
 | sunset_jhbcentral | skyline skybox + environment light | CC0 | Poly Haven | https://polyhaven.com/a/sunset_jhbcentral |
+| bed_trellis | bed.queen.upholstered-grey body | generated with TRELLIS (MIT) from listing photo 01b | this project | public/models/bed_trellis/bed.glb |

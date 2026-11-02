@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "meta": {
+    "title": "Bay Residences (sample)",
+    "location": "Bayside district · illustrative model",
+    "disclaimer": "Illustrative sample model built from one reference photo. Not a real listing."
+  },
+  "units": "m",
+  "towers": [
+    { "id": "t1", "name": "Tower One", "pos": [-52, 8], "footprint": { "w": 30, "d": 22, "radii": [8, 2.5, 2.5, 8] }, "floors": 23, "rotY": 6, "balcony": { "side": "right", "width": 6 }, "seed": 11 },
+    { "id": "t2", "name": "Tower Two", "pos": [-26, -22], "footprint": { "w": 26, "d": 20, "radii": [7, 2.5, 2.5, 7] }, "floors": 22, "rotY": -4, "balcony": { "side": "right", "width": 6 }, "seed": 23 },
+    { "id": "t3", "name": "Tower Three", "pos": [3, 9], "footprint": { "w": 34, "d": 24, "radii": [9, 2.5, 2.5, 9] }, "floors": 30, "rotY": 0, "balcony": { "side": "right", "width": 7 }, "seed": 37 },
+    { "id": "t4", "name": "Tower Four", "pos": [36, -12], "footprint": { "w": 28, "d": 22, "radii": [8, 2.5, 2.5, 8] }, "floors": 27, "rotY": -6, "balcony": { "side": "left", "width": 6 }, "seed": 41 },
+    { "id": "t5", "name": "Tower Five", "pos": [60, -32], "footprint": { "w": 24, "d": 19, "radii": [7, 2.5, 2.5, 7] }, "floors": 24, "rotY": -10, "seed": 53 }
+  ],
+  "podium": {
+    "id": "podium",
+    "name": "Retail podium",
+    "polygon": [[-74, 40], [70, 40], [80, 30], [80, -48], [-74, -48]],
+    "height": 13,
+    "retailHeight": 5
+  },
+  "deck": {
+    "id": "deck",
+    "name": "Amenity deck",
+    "pools": [[-14, 31, 24, 7]],
+    "planters": [[-40, 32, 12, 3], [16, 32, 10, 3], [-64, 30, 10, 3], [48, 24, 10, 3], [10, -38, 16, 4]],
+    "trees": [[-30, 26], [-30, 35], [26, 34], [40, 18], [-64, 22], [64, 10], [66, -2]]
+  },
+  "entrance": {
+    "id": "entrance",
+    "name": "Arrival & parking",
+    "pos": [64, 40],
+    "width": 14,
+    "height": 6,
+    "forecourt": [[48, 40], [80, 40], [80, 49], [48, 49]]
+  },
+  "signage": { "id": "signage", "text": "BAY RESIDENCES", "sub": "SAMPLE", "pos": [44, 10.2, 40.15], "width": 20, "height": 3.6 },
+  "bridge": { "id": "bridge", "name": "Pedestrian bridge", "from": [80, -6], "to": [98, -6], "y": 6, "width": 4, "height": 3.4 },
+  "context": [
+    { "id": "office", "name": "Office block", "kind": "office", "pos": [128, -10], "size": [58, 24, 72], "color": "#c8cbcd" },
+    { "id": "west-a", "name": "Mid-rise homes", "kind": "midrise", "pos": [-138, -24], "size": [32, 42, 24], "rotY": 4, "color": "#f2ead0", "accent": "#efc84a" },
+    { "id": "west-b", "name": "Mid-rise homes", "kind": "midrise", "pos": [-178, 14], "size": [28, 36, 22], "rotY": -6, "color": "#efe4c2", "accent": "#e9be3c" },
+    { "id": "west-c", "name": "Mid-rise homes", "kind": "midrise", "pos": [-128, -86], "size": [34, 48, 22], "rotY": 2, "color": "#f4edd8", "accent": "#efc84a" },
+    { "id": "west-d", "name": "Mid-rise homes", "kind": "midrise", "pos": [-192, -58], "size": [28, 40, 22], "rotY": -3, "color": "#efe2bd", "accent": "#e8b93a" }
+  ],
+  "filler": { "count": 110, "inner": 300, "outer": 950, "seed": 7 },
+  "landscape": {
+    "id": "landscape",
+    "palms": [
+      [-104, 56], [-86, 56], [-68, 56], [-50, 56], [-32, 56], [-14, 56], [4, 56], [22, 56], [40, 56], [86, 56], [104, 56],
+      [-96, 45], [-62, 45], [-28, 45], [8, 45], [30, 45],
+      { "pos": [96, 64], "height": 19 }, { "pos": [-6, 46], "height": 17 }
+    ],
+    "trees": [[-102, 30], [-94, 6], [-108, -16], [-98, -44], [-112, 48], [94, 34], [106, 50], [116, 34], [150, 40], [-150, 30]],
+    "hedges": [
+      [[-130, 51.5], [52, 51.5]], [[78, 51.5], [140, 51.5]],
+      [[-130, 61.5], [52, 61.5]], [[78, 61.5], [140, 61.5]]
+    ],
+    "hedgeWidth": 1.6,
+    "hedgeHeight": 1.2,
+    "paving": [
+      [[-84, 40], [86, 40], [86, 49], [-84, 49]],
+      [[56, 49], [74, 49], [74, 68], [56, 68]]
+    ],
+    "road": { "id": "road", "name": "Road frontage", "path": [[-420, 78], [460, 78]], "width": 20, "lanes": 4, "sidewalk": 4 }
+  },
+  "groups": {
+    "towers": ["t1", "t2", "t3", "t4", "t5"],
+    "frontage": ["entrance", "road"],
+    "retail": ["podium", "signage"],
+    "neighbourhood": ["office", "west-a", "west-b", "west-c", "west-d", "bridge"]
+  },
+  "chapters": [
+    {
+      "id": "intro",
+      "title": "Welcome",
+      "highlight": [],
+      "camera": { "kind": "orbit", "center": [4, 46, -6], "radius": 330, "endRadius": 270, "height": [165, 115], "startDeg": -38, "sweepDeg": 46 },
+      "durationHint": 11,
+      "narration": "Welcome to Bay Residences, a sample showcase. Five residential towers rise together from a shared podium, set along a palm-lined avenue."
+    },
+    {
+      "id": "towers",
+      "title": "The towers",
+      "highlight": ["towers"],
+      "camera": { "kind": "orbit", "center": [6, 62, -8], "radius": 175, "endRadius": 150, "height": [60, 96], "startDeg": 24, "sweepDeg": -44 },
+      "durationHint": 13,
+      "narration": "Each tower is wrapped in glass, with vertical bands of sky blue, deep blue and soft grey panels. Rounded ends soften the skyline and open homes to wide views."
+    },
+    {
+      "id": "podium",
+      "title": "Podium & retail",
+      "highlight": ["retail"],
+      "camera": { "kind": "dolly", "from": [-70, 16, 128], "to": [26, 14, 112], "lookFrom": [-26, 9, 40], "lookTo": [36, 9, 40] },
+      "durationHint": 11,
+      "narration": "At street level, a bright podium wraps the base with shops and everyday conveniences, so the essentials are only an elevator ride away."
+    },
+    {
+      "id": "deck",
+      "title": "Amenity deck",
+      "highlight": ["deck"],
+      "camera": { "kind": "orbit", "center": [-12, 14, 26], "radius": 78, "endRadius": 64, "height": [62, 46], "startDeg": -62, "sweepDeg": 58 },
+      "durationHint": 11,
+      "narration": "Above the podium, the amenity deck brings together a pool, shaded seating and planted terraces, a calm retreat shared between the towers."
+    },
+    {
+      "id": "arrival",
+      "title": "Arrival & parking",
+      "highlight": ["frontage"],
+      "camera": { "kind": "dolly", "from": [128, 22, 128], "to": [96, 13, 96], "lookFrom": [60, 6, 46], "lookTo": [64, 4, 42] },
+      "durationHint": 11,
+      "narration": "Arrivals come in from the main road frontage. A drop-off forecourt and a direct ramp into the podium car park keep every arrival simple."
+    },
+    {
+      "id": "neighbourhood",
+      "title": "The neighbourhood",
+      "highlight": ["neighbourhood"],
+      "camera": { "kind": "orbit", "center": [-6, 20, -14], "radius": 360, "endRadius": 330, "height": [210, 190], "startDeg": -62, "sweepDeg": 92 },
+      "durationHint": 12,
+      "narration": "The setting is already established, with mid-rise homes on one side and offices on the other, linked to the podium by a pedestrian bridge."
+    },
+    {
+      "id": "closing",
+      "title": "Bay Residences",
+      "highlight": ["towers", "podium"],
+      "camera": { "kind": "dolly", "from": [36, 34, 150], "to": [150, 170, 420], "lookFrom": [4, 58, -6], "lookTo": [4, 46, -6] },
+      "durationHint": 10,
+      "narration": "Five towers, one connected address. Thank you for joining this drone tour of Bay Residences."
+    }
+  ]
+}

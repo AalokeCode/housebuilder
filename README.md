@@ -3,6 +3,7 @@
 Turn listing photos into tourable, lightly editable 3D apartments that run in the browser on Android, iOS and desktop.
 
 - **Interior tours** (`/tour/<slug>`): first-person walk + floor hotspots, dollhouse view, photo-match cameras, per-room voice-over with line-by-line subtitles.
+- **Drone showcases** (`/site/<slug>`): exterior building + surroundings, keyframed aerial camera chapters, glowing outline on the highlighted element, procedural curtain-wall facade shader, voice-over with word-synced subtitles.
 - **Agent pipeline**: Claude Code converts reference images → `HouseSpec` JSON → validated → rendered. See `/convert-house`.
 
 Stack: Next.js 16 (App Router, Cache Components) · React 19 · three.js 0.187 · React Three Fiber 9 · drei · postprocessing (N8AO) · Zod 4 · Zustand · Tailwind 4 · Lucide.
@@ -23,6 +24,7 @@ pnpm dev -p 3210             # http://localhost:3210
 | `/tour/<slug>` | the tour |
 | `/preview/<slug>?cam=01a&clean=1` | photo-match camera, UI hidden (for screenshots) |
 | `/tour/<slug>?mode=dollhouse` | dollhouse (cut-away) view |
+| `/site/<slug>` | drone showcase (`?chapter=<n>&t=0..1&clean=1` for screenshots) |
 
 ## Scripts
 
@@ -31,6 +33,7 @@ pnpm dev -p 3210             # http://localhost:3210
 | `pnpm house:validate <slug> [--shell] [--room <id>] [--json]` | schema + geometry + content checks (exit 1 on errors) |
 | `pnpm house:preview <slug> [--port 3210]` | validate, then start dev server and print photo-match URLs |
 | `pnpm assets:fetch [models\|textures\|hdri\|<id>…]` | download free assets listed in `scripts/fetch-assets.ts`; regenerates `public/models/LICENSES.md` |
+| `pnpm exec tsx scripts/site-validate.ts <slug>` | validate a drone-showcase `sites/<slug>/site.json` |
 | `pnpm typecheck` / `pnpm lint` / `pnpm build` | quality gates |
 
 ## Adding a house (agents)
@@ -91,6 +94,13 @@ HouseValidator (src/domain/validator.ts)                 geometry + content chec
 | Contact shadows rendered once (`frames={1}`) | `scene/Atmosphere.tsx` |
 | Tiering by `pointer: coarse`: DPR ≤ 1.5, half-res N8AO, no SMAA, no practical lamp lights, 4k skybox (8k desktop) | `Viewer.tsx`, `Atmosphere.tsx`, `Environment.tsx` |
 | 1k textures; no realtime shadow maps | `scripts/fetch-assets.ts` |
+
+### Drone showcases
+
+`sites/<slug>/site.json` (`SiteSpec`, `src/domain/site-spec.ts`) → `compileSite` (pure, `src/domain/site-compiler.ts`) →
+`/site/[slug]` → `src/site/` (R3F). Towers, podium, deck, entrance, signage, bridge, context blocks, landscape and
+`chapters[]` (camera move + highlight ids + narration). Facade windows are drawn in a shader, palms/trees/filler city are
+instanced, and the shadow map is baked once on desktop (none on phones): about 15–23 draw calls.
 
 ### Voice-over
 

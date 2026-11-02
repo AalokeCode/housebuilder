@@ -294,7 +294,7 @@ function VaseFlowers({ s: [w, h], c }: BuilderProps) {
   );
 }
 
-function Bed({ s: [w, h, d], c }: BuilderProps) {
+function Bed({ s: [w, h, d], c, model }: BuilderProps) {
   const top = 0.58;
   const duvetZ = d * 0.16;
   const duvetL = d * 0.66;
@@ -304,12 +304,23 @@ function Bed({ s: [w, h, d], c }: BuilderProps) {
   );
   return (
     <group>
-      {/* plinth + upholstered base */}
+      {/* plinth */}
       <Box s={[w - 0.12, 0.08, d - 0.24]} p={[0, 0.04, 0.05]} c="#3a3733" />
-      <Box s={[w, 0.26, d - 0.08]} p={[0, 0.21, 0.04]} mat={U(c.frame)} round={0.05} />
+      {model ? (
+        /* AI-generated body (TRELLIS, from listing photo 01b): base + mattress + duvet + throw + towels */
+        <group position={[0, 0.06, 0.07]}>
+          <Suspense fallback={null}>
+            <Glb url={model} s={[w + 0.02, top + 0.1, d - 0.12]} fit="stretch" yaw={BED_MODEL_YAW} matte />
+          </Suspense>
+        </group>
+      ) : (
+        <Box s={[w, 0.26, d - 0.08]} p={[0, 0.21, 0.04]} mat={U(c.frame)} round={0.05} />
+      )}
       {/* piped headboard with proud inset panel */}
       <Box s={[w + 0.08, h, 0.12]} p={[0, h / 2, -d / 2 + 0.06]} mat={U(c.frame)} round={0.06} />
       <Box s={[w - 0.16, h - 0.42, 0.05]} p={[0, h / 2 + 0.14, -d / 2 + 0.135]} mat={U(c.frame)} round={0.025} />
+      {!model && (
+        <>
       {/* mattress */}
       <Box s={[w - 0.1, 0.24, d - 0.24]} p={[0, 0.46, 0.06]} mat={F(c.sheet)} round={0.07} />
       {/* duvet: top, side + foot drapes, turned-down band */}
@@ -324,21 +335,20 @@ function Bed({ s: [w, h, d], c }: BuilderProps) {
       {[-1, 1].map((sx) => (
         <Box key={sx} s={[0.03, 0.36, 0.52]} p={[sx * (w / 2 + 0.025), top - 0.1, d / 2 - 0.44]} mat={F(c.throw)} round={0.012} />
       ))}
-      {/* euro + sleeping pillows */}
-      {[-1, 1].map((sx) => (
-        <Box key={`e${sx}`} s={[0.66, 0.56, 0.18]} p={[sx * 0.42, top + 0.27, -d / 2 + 0.26]} rot={[-0.16, 0, 0]} mat={F(c.pillow)} round={0.085} />
-      ))}
-      {[-1, 1].map((sx) => (
-        <Box key={`p${sx}`} s={[0.62, 0.36, 0.16]} p={[sx * 0.4, top + 0.19, -d / 2 + 0.44]} rot={[-0.42, 0, 0]} mat={F(c.pillow)} round={0.075} />
-      ))}
+        </>
+      )}
       {/* damask cushions (texture cropped from the reference photo) */}
       {[-1, 1].map((sx) => (
         <RoundedBox key={`c${sx}`} args={[0.46, 0.42, 0.13]} radius={0.06} smoothness={3} position={[sx * 0.27, top + 0.2, -d / 2 + 0.62]} rotation={[-0.3, sx * -0.12, sx * 0.04]} material={cushion} />
       ))}
-      {/* folded towels */}
-      <Box s={[0.34, 0.05, 0.24]} p={[0.18, top + 0.1, 0.32]} mat={F("#ffffff")} round={0.02} />
-      <Box s={[0.32, 0.045, 0.22]} p={[0.18, top + 0.147, 0.32]} mat={F("#f3f3f1")} round={0.02} />
-      <Box s={[0.3, 0.04, 0.2]} p={[0.5, top + 0.095, 0.36]} rot={[0, 0.2, 0]} mat={F("#ffffff")} round={0.018} />
+      {!model && (
+        <>
+          {/* folded towels */}
+          <Box s={[0.34, 0.05, 0.24]} p={[0.18, top + 0.1, 0.32]} mat={F("#ffffff")} round={0.02} />
+          <Box s={[0.32, 0.045, 0.22]} p={[0.18, top + 0.147, 0.32]} mat={F("#f3f3f1")} round={0.02} />
+          <Box s={[0.3, 0.04, 0.2]} p={[0.5, top + 0.095, 0.36]} rot={[0, 0.2, 0]} mat={F("#ffffff")} round={0.018} />
+        </>
+      )}
     </group>
   );
 }
@@ -440,21 +450,36 @@ function Placeholder({ s: [w, h, d], c }: BuilderProps) {
   return <Box s={[w, h, d]} p={[0, h / 2, 0]} c={c.body} r={0.6} round={0.02} />;
 }
 
-function Glb({ url, s, fit }: { url: string; s: V3; fit: "contain" | "height" }) {
+function Glb({ url, s, fit, yaw = 0, matte = false }: { url: string; s: V3; fit: "contain" | "height" | "stretch"; yaw?: number; matte?: boolean }) {
   const { scene } = useGLTF(url);
   const obj = useMemo(() => {
-    const clone = cloneSkinned(scene);
+    const inner = cloneSkinned(scene);
+    inner.rotation.y = yaw;
+    if (matte) {
+      // AI-generated meshes often export metallic PBR — force fabric-like response
+      inner.traverse((o) => {
+        const m = (o as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined;
+        if (m && "metalness" in m) {
+          const mm = m.clone();
+          mm.metalness = 0;
+          mm.roughness = 0.92;
+          (o as THREE.Mesh).material = mm;
+        }
+      });
+    }
+    const clone = new THREE.Group();
+    clone.add(inner);
     clone.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(clone, true);
     const size = box.getSize(new THREE.Vector3());
-    const k = fit === "height" ? s[1] / size.y : Math.min(s[0] / size.x, s[1] / size.y, s[2] / size.z);
-    clone.scale.setScalar(k);
+    if (fit === "stretch") clone.scale.set(s[0] / size.x, s[1] / size.y, s[2] / size.z);
+    else clone.scale.setScalar(fit === "height" ? s[1] / size.y : Math.min(s[0] / size.x, s[1] / size.y, s[2] / size.z));
     clone.updateMatrixWorld(true);
     const b2 = new THREE.Box3().setFromObject(clone, true);
     const center = b2.getCenter(new THREE.Vector3());
     clone.position.set(-center.x, -b2.min.y, -center.z);
     return clone;
-  }, [scene, s, fit]);
+  }, [scene, s, fit, yaw, matte]);
   return <primitive object={obj} />;
 }
 
@@ -487,7 +512,9 @@ const BUILDERS: Record<string, (p: BuilderProps) => ReactNode> = {
 /** organic / posed models: scale by height, not bounding box */
 const HEIGHT_FIT = new Set(["plant"]);
 /** builders that place their own GLB part */
-const COMPOSITE = new Set(["orchidVase"]);
+const COMPOSITE = new Set(["orchidVase", "bed"]);
+/** TRELLIS export has the foot at -Z; rotate so the foot faces the room (+Z) */
+const BED_MODEL_YAW = Math.PI;
 
 export function FurnitureItem({ item }: { item: CompiledItem }) {
   const s = item.size as V3;

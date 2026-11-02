@@ -78,6 +78,11 @@ async function fetchHdri(rows: string[]) {
   console.log(`✓ hdri ${HDRI.id}`);
 }
 
+/** Assets generated (not downloaded) — committed directly, listed for provenance. */
+export const GENERATED = [
+  { id: "bed_trellis", use: "bed.queen.upholstered-grey body", license: "generated with TRELLIS (MIT) from listing photo 01b", author: "this project", page: "public/models/bed_trellis/bed.glb" },
+];
+
 /** Always lists every manifest entry, so partial fetches never drop attributions. */
 function licenseTable() {
   const ph = (id: string, use: string) => `| ${id} | ${use} | CC0 | Poly Haven | https://polyhaven.com/a/${id} |`;
@@ -85,6 +90,7 @@ function licenseTable() {
     ...ASSETS.map((a) => (a.kind === "polyhaven" ? ph(a.id, a.use) : `| ${a.id} | ${a.use} | ${a.license} | ${a.author} | ${a.page} |`)),
     ...TEXTURES.map((t) => ph(t.id, t.use)),
     ph(HDRI.id, HDRI.use),
+    ...GENERATED.map((g) => `| ${g.id} | ${g.use} | ${g.license} | ${g.author} | ${g.page} |`),
   ];
   return `# Third-party assets (models, textures, HDRI)\n\n| id | use | license | author | source |\n|---|---|---|---|---|\n${lines.join("\n")}\n`;
 }
