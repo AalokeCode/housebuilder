@@ -1,12 +1,13 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { compileSite, type CompiledSite, type SiteIssue } from "@/domain/site-compiler";
+import { BUILDINGS_DIR } from "./paths";
 
 const SLUG = /^[a-z0-9][a-z0-9-]*$/;
 
-/** Reads sites/<slug>/site.json from disk and compiles it. */
+/** Reads models/buildings/<slug>/site.json from disk and compiles it. */
 export class SiteRepository {
-  constructor(private readonly root: string = path.join(process.cwd(), "sites")) {}
+  constructor(private readonly root: string = BUILDINGS_DIR) {}
 
   async listSlugs(): Promise<string[]> {
     const entries = await fs.readdir(this.root, { withFileTypes: true }).catch(() => []);

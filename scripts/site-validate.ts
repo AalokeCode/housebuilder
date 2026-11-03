@@ -13,7 +13,7 @@ async function main() {
   }
   const res = await new SiteRepository().load(slug);
   if (!res) {
-    console.error(`sites/${slug}/site.json not found`);
+    console.error(`models/buildings/${slug}/site.json not found`);
     process.exit(2);
   }
   const { site, issues } = res;

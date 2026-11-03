@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Exterior "drone showcase" site spec (sites/<slug>/site.json).
+ * Exterior "drone showcase" site spec (models/buildings/<slug>/site.json).
  * Units: metres. Plan axes: x → east, z → south, y up. Angles in degrees.
  * Agent-authorable: every field is plain JSON, defaults keep files short.
  */

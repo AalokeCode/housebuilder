@@ -33,7 +33,7 @@ export class HouseService {
 
   async get(slug: string, opts: ValidateOptions = {}): Promise<HouseResult> {
     const src = await this.repo.load(slug);
-    if (!src) return { house: null, revision: "none", issues: [{ level: "error", code: "not-found", where: slug, msg: "houses/<slug>/house.json not found" }] };
+    if (!src) return { house: null, revision: "none", issues: [{ level: "error", code: "not-found", where: slug, msg: "models/houses/<slug>/house.json not found" }] };
     if (!src.spec) return { house: null, revision: src.revision, issues: src.issues };
 
     const { house, issues } = this.compiler.compile(src.spec, src.itemFiles);

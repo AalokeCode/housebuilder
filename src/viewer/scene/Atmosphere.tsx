@@ -26,10 +26,16 @@ export type Tier = "low" | "high";
 /** Background yaw that puts the skyline's centre (Pudong) in the -z (north) view — the glazing side. */
 export const SKYLINE_YAW = 1.885;
 
-export function Sky({ rotation = 0, tier }: { rotation?: number; tier: Tier }) {
+/** Per-house window view (`meta.sky`) — falls back to the city skyline. */
+export type SkyChoice = { low: string; high: string; yaw?: number };
+
+/** `stage`: flat backdrop colour instead of the window-view panorama (cover-page dollhouse). Lighting is unchanged. */
+export function Sky({ rotation = 0, tier, sky, stage }: { rotation?: number; tier: Tier; sky?: SkyChoice; stage?: string }) {
   const scene = useThree((s) => s.scene);
   const gl = useThree((s) => s.gl);
-  const tex = useTexture(tier === "high" && gl.capabilities.maxTextureSize >= 8192 ? SKY.bg.high : SKY.bg.low);
+  const bg = sky ? { low: asset(sky.low), high: asset(sky.high) } : SKY.bg;
+  const yaw = sky?.yaw ?? SKYLINE_YAW;
+  const tex = useTexture(tier === "high" && gl.capabilities.maxTextureSize >= 8192 ? bg.high : bg.low);
   useEffect(() => {
     tex.mapping = THREE.EquirectangularReflectionMapping;
     tex.colorSpace = THREE.SRGBColorSpace;
@@ -37,18 +43,18 @@ export function Sky({ rotation = 0, tier }: { rotation?: number; tier: Tier }) {
     tex.generateMipmaps = false;
     tex.minFilter = THREE.LinearFilter;
     tex.needsUpdate = true; // re-upload: useTexture may have uploaded before colorSpace was set (renders washed out)
-    scene.background = tex;
+    scene.background = stage ? new THREE.Color(stage) : tex;
     return () => {
       scene.background = null;
     };
-  }, [tex, scene, gl]);
+  }, [tex, scene, gl, stage]);
   // drei's <Environment> owns scene.background/environment rotation + intensity — set them here, not on the scene
   return (
     <Environment
       files={SKY.hdr}
       environmentIntensity={0.32}
       environmentRotation={[0, rotation, 0]}
-      backgroundRotation={[0, SKYLINE_YAW, 0]}
+      backgroundRotation={[0, yaw, 0]}
       backgroundIntensity={0.85}
     />
   );

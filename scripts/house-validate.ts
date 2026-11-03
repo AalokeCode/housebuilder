@@ -2,6 +2,7 @@
  * Usage: pnpm house:validate <slug> [--shell] [--room <roomId>] [--json]
  * Exit 0 = no errors (warnings allowed). Exit 1 = errors.
  */
+import { isOutdoor } from "../src/domain/house-spec";
 import { HouseService } from "../src/server/house-service";
 
 async function main() {
@@ -23,7 +24,7 @@ async function main() {
   } else {
     for (const i of issues) console.log(`${i.level === "error" ? "✖" : "⚠"} [${i.code}] ${i.where}: ${i.msg}`);
     if (house) {
-      const area = house.rooms.filter((r) => r.type !== "balcony").reduce((s, r) => s + r.area, 0);
+      const area = house.rooms.filter((r) => !isOutdoor(r.type)).reduce((s, r) => s + r.area, 0);
       console.log(
         `\n${slug}: ${house.rooms.length} rooms (${area.toFixed(1)} m² interior) · ${house.walls.length} walls · ` +
           `${house.walls.reduce((s, w) => s + w.openings.length, 0)} openings · ${house.items.length} items ` +

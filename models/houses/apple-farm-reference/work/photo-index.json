@@ -1,0 +1,80 @@
+{
+  "slug": "apple-farm-reference",
+  "scale": {
+    "planPxPerM": 56,
+    "method": "door leaves (0.85-0.90 m = 47.5-50 px), kitchen counter depth (0.65 m = 37.5 px) and 123.23 m² gross area (≈ 55-56 px/m) agree; printed 0-10 m bar (29.8 px/m) rejected as ~1.9x off",
+    "origin": "plan px (237.5, 462.5) = masterroom NW interior corner",
+    "north": "plan up = north (compass bottom-right of H13)"
+  },
+  "photos": [
+    {
+      "id": "H05",
+      "file": "H05.jpg",
+      "type": "completed-photo",
+      "rooms": ["living", "deck"],
+      "camera": { "standingIn": "living", "facing": "W", "height": "eye", "lens": "wide ~18-20mm, verticals corrected" },
+      "visibleWalls": [
+        { "room": "living", "desc": "S wall: full-width timber-framed (warm brown) lift-and-slide glazing, 1 large fixed pane + slider, narrow fixed pane at W end showing exterior timber battens" },
+        { "room": "living", "desc": "W wall: birch plywood panelling in vertical boards (~0.3-0.6 m wide), flush plywood door at N end (to corridor), light switch left of TV" },
+        { "room": "living", "desc": "N wall: full-height built-in, white gloss upper doors, walnut open cubbies band ~0.9-1.6 m, white gloss lower doors" }
+      ],
+      "objects": [
+        { "what": "low TV stand: walnut drawers on black metal frame, white top, ~1.6 m", "room": "living", "approxPos": "centre of W wall" },
+        { "what": "65\" TV on stand", "room": "living", "approxPos": "centre of W wall" },
+        { "what": "2 black floor speakers either side of TV stand", "room": "living", "approxPos": "W wall" },
+        { "what": "ceiling cassette AC unit (white)", "room": "living", "approxPos": "ceiling near N wall" }
+      ],
+      "materials": { "floor": "natural oak strip flooring, warm honey", "walls": "birch plywood panels (W), white gloss built-ins (N)", "ceiling": "longitudinal timber slats (cedar/larch) E-W with recessed downlights" },
+      "scaleClues": ["TV ≈ 1.45 m wide (65\") → back wall height ≈ 2.6 m", "door in panelling ≈ 2.1 m"],
+      "adjacency": ["deck outside S glazing", "flush door W wall N end → corridor (H08 looks back through it)"]
+    },
+    {
+      "id": "H07",
+      "file": "H07.jpg",
+      "type": "completed-photo",
+      "rooms": ["living", "kitchen", "deck"],
+      "camera": { "standingIn": "living", "facing": "E", "height": "eye", "lens": "wide ~18mm, verticals corrected" },
+      "visibleWalls": [
+        { "room": "living", "desc": "N wall: same white gloss + walnut cubby built-in as H05 (shared anchor)" },
+        { "room": "living", "desc": "S wall: timber-framed slider (same as H05) on right" },
+        { "room": "kitchen", "desc": "E end: plywood flush door to entrance (left), white partition fin, white tall fridge housing, plywood tall cabinet, stainless hood, white gloss uppers, grey tile splash" },
+        { "room": "kitchen", "desc": "S side: white gloss base run with dark worktop under window" }
+      ],
+      "objects": [
+        { "what": "rectangular solid oak dining table ~1.8 x 0.85, oriented N-S", "room": "kitchen", "approxPos": "centre, beyond partition fin" },
+        { "what": "2 black shell dining chairs on wooden legs (W side)", "room": "kitchen", "approxPos": "near side of table" },
+        { "what": "2 white cone pendants over table", "room": "kitchen", "approxPos": "above table" },
+        { "what": "2 linear fluorescent ceiling lights", "room": "kitchen", "approxPos": "over kitchen" },
+        { "what": "wine bottles in walnut cubbies", "room": "living", "approxPos": "left foreground" }
+      ],
+      "materials": { "floor": "same oak strip", "walls": "white paint, plywood door", "ceiling": "same timber slats" },
+      "scaleClues": ["dining chair seat ≈ 0.45 m", "plywood door ≈ 2.1 m"],
+      "adjacency": ["H05 and H07 are reverse views of one living/dining space (shared built-in + ceiling)", "kitchen open to living"]
+    },
+    {
+      "id": "H08",
+      "file": "H08.jpg",
+      "type": "completed-photo",
+      "rooms": ["corridor", "living"],
+      "camera": { "standingIn": "corridor", "facing": "E", "height": "eye", "lens": "~24mm portrait" },
+      "visibleWalls": [
+        { "room": "corridor", "desc": "N wall: smooth pale white/grey paint, no windows visible" },
+        { "room": "corridor", "desc": "S wall: board-formed exposed concrete, two deep-reveal door openings (bathroom, guestroom), white flush doors" },
+        { "room": "living", "desc": "end: doorway with timber frame into living; plywood door + dining chair visible beyond" }
+      ],
+      "objects": [],
+      "materials": { "floor": "same oak strip", "walls": "white paint (N) / board-formed concrete (S)", "ceiling": "white flat ceiling, 2 square downlights" },
+      "scaleClues": ["door openings ≈ 2.1 m", "corridor ≈ 1.1-1.2 m wide"],
+      "adjacency": ["corridor E end opens into living W wall (N end)"]
+    },
+    { "id": "H01", "file": "H01.jpg", "type": "completed-photo", "rooms": ["exterior"], "camera": { "standingIn": "outside", "facing": "W along N facade", "height": "eye", "lens": "wide" }, "objects": [{ "what": "folded concrete canopy over entry court, timber-clad recessed entry with dark door", "room": "exterior", "approxPos": "centre" }], "materials": { "walls": "board-formed concrete + dark-stained vertical timber battens" }, "adjacency": ["entry/covered work area at E end"] },
+    { "id": "H02", "file": "H02.jpg", "type": "completed-photo", "rooms": ["exterior"], "camera": { "standingIn": "outside", "facing": "end wall", "height": "low", "lens": "wide" }, "objects": [{ "what": "concrete end wall, canopy cantilever, rock retaining", "room": "exterior", "approxPos": "" }], "materials": {}, "adjacency": [] },
+    { "id": "H03", "file": "H03.jpg", "type": "completed-photo", "rooms": ["exterior"], "camera": { "standingIn": "outside", "facing": "S facade oblique", "height": "eye", "lens": "wide" }, "objects": [{ "what": "S facade: timber battens, ribbon windows (master, guest), small square (bath), living slider + deck, concrete at E", "room": "exterior", "approxPos": "" }], "materials": { "walls": "dark-stained timber battens, concrete" }, "adjacency": ["window rhythm matches plan S wall"] },
+    { "id": "H04", "file": "H04.jpg", "type": "completed-photo", "rooms": ["exterior"], "camera": { "standingIn": "covered work area", "facing": "out (SE)", "height": "eye", "lens": "wide" }, "objects": [{ "what": "crazy-paving stone court, valley + mountains beyond", "room": "exterior", "approxPos": "" }], "materials": {}, "adjacency": ["context for skybox: green valley ringed by mountains"] },
+    { "id": "H06", "file": "H06.jpg", "type": "completed-photo", "rooms": ["exterior"], "camera": { "standingIn": "outside", "facing": "recessed bay", "height": "eye", "lens": "normal" }, "objects": [{ "what": "timber infill between concrete returns with narrow glazed slots", "room": "exterior", "approxPos": "" }], "materials": {}, "adjacency": ["likely N side, corridor/storage zone"] },
+    { "id": "H09", "file": "H09.jpg", "type": "completed-photo", "rooms": ["exterior"], "camera": { "standingIn": "road", "facing": "house", "height": "eye", "lens": "normal" }, "objects": [], "materials": {}, "adjacency": ["rural context, terraced plot"] },
+    { "id": "H10", "file": "H10.jpg", "type": "completed-photo", "rooms": ["exterior"], "camera": { "standingIn": "outside", "facing": "S facade", "height": "eye", "lens": "wide" }, "objects": [{ "what": "S facade at dusk; lit living slider centre", "room": "exterior", "approxPos": "" }], "materials": {}, "adjacency": ["confirms S window sequence"] },
+    { "id": "H11", "file": "H11.jpg", "type": "illustration", "rooms": ["exterior"], "note": "presentation illustration — not evidence" },
+    { "id": "H16", "file": "H16.jpg", "type": "detail-collage", "rooms": ["exterior"], "note": "wall section: floor heating + wood flooring, low-E triple glass" }
+  ]
+}

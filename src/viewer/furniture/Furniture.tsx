@@ -666,6 +666,156 @@ function TowelRail({ s: [w, h], c }: BuilderProps) {
   );
 }
 
+// ───────── built-ins & photographed pieces (apple-farm-reference) ─────────
+
+/**
+ * Full-height storage wall: plinth, door fronts and — when `c.cubby` is set — an open box band of `c.cubby` veneer
+ * between `c.band` (two heights "lo,hi" in m, default 0.85,1.55). Doors read as gloss panels with 4 mm shadow gaps.
+ */
+function BuiltIn({ s: [w, h, d], c }: BuilderProps) {
+  const gloss = materials.color(c.body, 0.18);
+  const gap = materials.color("#2b2b2b", 0.9);
+  const doorW = w / Math.max(1, Math.round(w / 0.5));
+  const n = Math.round(w / doorW);
+  const [lo, hi] = (c.band ?? "0.85,1.55").split(",").map(Number);
+  const plinth = 0.06;
+  const zones: [number, number][] = c.cubby ? [[plinth, lo], [hi, h]] : [[plinth, h]];
+  const veneer = c.cubby ? W(c.cubby) : null;
+  const cols = Math.max(1, Math.round(w / 0.42));
+  const t = 0.018;
+  return (
+    <group>
+      <Box s={[w - 0.02, plinth, d - 0.05]} p={[0, plinth / 2, -0.025]} c="#2f2f2f" />
+      {/* carcass back: one slab buried behind every front so no face is coplanar with the wall */}
+      <Box s={[w - 0.004, h - plinth, 0.02]} p={[0, plinth + (h - plinth) / 2, -d / 2 + 0.01]} mat={gloss} />
+      {zones.map(([y0, y1], zi) => (
+        <group key={zi}>
+          <Box s={[w, y1 - y0, d - 0.04]} p={[0, (y0 + y1) / 2, -0.02]} mat={gloss} />
+          {Array.from({ length: n - 1 }, (_, i) => (
+            <Box key={i} s={[0.004, y1 - y0 - 0.01, 0.006]} p={[-w / 2 + (i + 1) * doorW, (y0 + y1) / 2, d / 2 - 0.037]} mat={gap} />
+          ))}
+          <Box s={[w - 0.01, 0.004, 0.006]} p={[0, y1 - 0.004, d / 2 - 0.037]} mat={gap} />
+        </group>
+      ))}
+      {veneer && (
+        <group>
+          {/* open boxes: back, shelves and dividers in veneer. Every veneer face sits ≥ 2 mm off the white carcass
+              faces (back slab front, carcass ends) — coincident faces of two materials flicker (user-spotted). */}
+          <Box s={[w - 0.012, hi - lo + EMBED, 0.016]} p={[0, (lo + hi) / 2, -d / 2 + 0.02 + 0.003 + 0.008]} mat={veneer} />
+          <Box s={[w - 0.008, t, d - 0.045]} p={[0, lo + t / 2, -0.0175]} mat={veneer} />
+          <Box s={[w - 0.008, t, d - 0.045]} p={[0, (lo + hi) / 2, -0.0175]} mat={veneer} />
+          {Array.from({ length: cols + 1 }, (_, i) => (
+            <Box key={i} s={[t, hi - lo + EMBED, d - 0.05]} p={[-w / 2 + 0.004 + t / 2 + (i * (w - 0.008 - t)) / cols, (lo + hi) / 2, -0.025]} mat={veneer} />
+          ))}
+        </group>
+      )}
+    </group>
+  );
+}
+
+/** Solid timber table: thick top, square legs set in from the corners, apron tying them (H07 dining table). */
+function RectTable({ s: [w, h, d], c }: BuilderProps) {
+  const wood = W(c.wood);
+  const top = 0.04;
+  const leg = 0.06;
+  const ix = w / 2 - 0.08;
+  const iz = d / 2 - 0.08;
+  return (
+    <group>
+      <Box s={[w, top, d]} p={[0, h - top / 2, 0]} mat={wood} round={0.004} />
+      {[-1, 1].flatMap((sx) => [-1, 1].map((sz) => <Box key={`${sx}${sz}`} s={[leg, h - top + EMBED, leg]} p={[sx * ix, (h - top + EMBED) / 2, sz * iz]} mat={wood} />))}
+      <Box s={[2 * ix, 0.08, 0.025]} p={[0, h - top - 0.04 + EMBED / 2, iz]} mat={wood} />
+      <Box s={[2 * ix, 0.08, 0.025]} p={[0, h - top - 0.04 + EMBED / 2, -iz]} mat={wood} />
+    </group>
+  );
+}
+
+/** Moulded shell chair on four splayed timber legs (H07: black shells, oak legs). */
+function ShellChair({ s: [w, h, d], c }: BuilderProps) {
+  const shell = materials.color(c.shell, 0.55);
+  const wood = W(c.wood);
+  const seatY = 0.45;
+  const backH = h - seatY;
+  return (
+    <group>
+      {[-1, 1].flatMap((sx) =>
+        [-1, 1].map((sz) => <Leg key={`${sx}${sz}`} from={[sx * (w / 2 - 0.04), 0, sz * (d / 2 - 0.05)]} to={[sx * 0.13, seatY - 0.04, sz * 0.13]} t={0.03} mat={wood} round />),
+      )}
+      <Box s={[0.3, 0.03, 0.3]} p={[0, seatY - 0.045, 0]} mat={wood} />
+      <Box s={[w - 0.04, 0.05, d - 0.1]} p={[0, seatY - 0.01, 0.02]} mat={shell} round={0.022} />
+      <group position={[0, seatY - 0.03, -d / 2 + 0.07]} rotation={[-0.16, 0, 0]}>
+        <Box s={[w - 0.06, backH + 0.03, 0.04]} p={[0, (backH + 0.03) / 2, 0]} mat={shell} round={0.018} />
+      </group>
+    </group>
+  );
+}
+
+/** Low media unit: black steel frame, white top, a row of timber drawer boxes (H05 TV stand). */
+function MediaUnit({ s: [w, h, d], c }: BuilderProps) {
+  const steel = materials.color(c.frame, 0.45, 0.5);
+  const wood = W(c.wood);
+  const boxes = Math.max(2, Math.round(w / 0.5));
+  const bw = (w - 0.06) / boxes;
+  return (
+    <group>
+      {[-1, 1].flatMap((sx) => [-1, 1].map((sz) => <Box key={`${sx}${sz}`} s={[0.025, h - 0.02, 0.025]} p={[sx * (w / 2 - 0.0125), (h - 0.02) / 2, sz * (d / 2 - 0.0125)]} mat={steel} />))}
+      <Box s={[w - 0.02, 0.02, d - 0.02]} p={[0, 0.06, 0]} mat={steel} />
+      <Box s={[w + 0.01, 0.025, d + 0.01]} p={[0, h - 0.0125, 0]} c={c.top} r={0.3} />
+      {Array.from({ length: boxes }, (_, i) => (
+        <group key={i}>
+          <Box s={[bw - 0.01, h - 0.12, d - 0.04]} p={[-w / 2 + 0.03 + bw * (i + 0.5), 0.07 + (h - 0.12) / 2, 0]} mat={wood} />
+          <Box s={[bw - 0.02, 0.004, 0.006]} p={[-w / 2 + 0.03 + bw * (i + 0.5), 0.07 + (h - 0.12) / 2, d / 2 - 0.017]} c="#2a1c12" />
+        </group>
+      ))}
+    </group>
+  );
+}
+
+/** Floor-standing speaker: black cabinet, woofer ring. */
+function Speaker({ s: [w, h, d], c }: BuilderProps) {
+  return (
+    <group>
+      <Box s={[w, h, d]} p={[0, h / 2, 0]} c={c.body} r={0.5} round={0.01} />
+      <mesh position={[0, h * 0.28, d / 2 + 0.002]} material={materials.color("#cfcfcf", 0.4, 0.5)}>
+        <torusGeometry args={[w * 0.3, 0.008, 8, 32]} />
+      </mesh>
+    </group>
+  );
+}
+
+/** White opal cone pendant on a long flex (H07, over the dining table). Origin at the ceiling. */
+function ConePendant({ s: [w, h], c }: BuilderProps) {
+  const shade = materials.color(c.shade, 0.35);
+  const r = w / 2;
+  const coneH = r * 1.9;
+  return (
+    <group>
+      <Cyl r={0.04} h={0.02} p={[0, -0.01, 0]} c={c.shade} rough={0.4} />
+      <Cyl r={0.003} h={h - coneH} p={[0, -(h - coneH) / 2, 0]} c="#dddddd" />
+      <Cyl r={0.025} rb={r} h={coneH} p={[0, -h + coneH / 2, 0]} mat={shade} seg={32} />
+      <Cyl r={r * 0.7} h={0.004} p={[0, -h + 0.006, 0]} mat={materials.emissive("#ffe2bd", 1.8)} seg={24} />
+    </group>
+  );
+}
+
+/** Ceiling cassette air-conditioner (white body, slot vents). Origin at the ceiling. */
+function AcCassette({ s: [w, h, d], c }: BuilderProps) {
+  return (
+    <group>
+      <Box s={[w, h, d]} p={[0, -h / 2 + 0.005, 0]} c={c.body} r={0.4} />
+      <Box s={[w * 0.5, 0.004, d * 0.5]} p={[0, -h - 0.0, 0]} c="#cfcfcb" r={0.6} />
+      {[-1, 1].map((sx) => (
+        <Box key={sx} s={[0.03, 0.006, d * 0.7]} p={[sx * w * 0.36, -h, 0]} c="#7d7d7a" r={0.6} />
+      ))}
+    </group>
+  );
+}
+
+/** Plain slab: partition fins, panels (body colour, optional `c.wood` veneer). */
+function Panel({ s: [w, h, d], c }: BuilderProps) {
+  return <Box s={[w, h, d]} p={[0, h / 2, 0]} mat={c.wood ? W(c.wood) : materials.color(c.body, 0.4)} />;
+}
+
 function Placeholder({ s: [w, h, d], c }: BuilderProps) {
   return <Box s={[w, h, d]} p={[0, h / 2, 0]} c={c.body} r={0.6} round={0.02} />;
 }
@@ -735,6 +885,14 @@ const BUILDERS: Record<string, (p: BuilderProps) => ReactNode> = {
   wc: Wc,
   shower: Shower,
   towelRail: TowelRail,
+  builtIn: BuiltIn,
+  rectTable: RectTable,
+  shellChair: ShellChair,
+  mediaUnit: MediaUnit,
+  speaker: Speaker,
+  conePendant: ConePendant,
+  acCassette: AcCassette,
+  panel: Panel,
   placeholder: Placeholder,
 };
 

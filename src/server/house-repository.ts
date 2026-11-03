@@ -4,6 +4,7 @@ import path from "node:path";
 import { z } from "zod";
 import type { Issue } from "@/domain/compiled";
 import { HouseSpec, RoomItemsFile } from "@/domain/house-spec";
+import { HOUSES_DIR, PUBLIC_HOUSES_DIR } from "./paths";
 
 export interface HouseSource {
   spec: HouseSpec | null;
@@ -26,11 +27,11 @@ export const SLUG = /^[a-z0-9][a-z0-9-]{0,63}$/;
 const PHOTO = /\.(jpe?g|png|webp)$/i;
 const ITEMS_GLOB = /^[\w./-]*\*[\w.-]*$/;
 
-/** Reads houses/<slug>/ from disk. Never throws for bad content — returns issues instead. */
+/** Reads models/houses/<slug>/ from disk. Never throws for bad content — returns issues instead. */
 export class FileHouseRepository {
   constructor(
-    private readonly root: string = path.join(process.cwd(), "houses"),
-    private readonly publicRoot: string = path.join(process.cwd(), "public", "houses"),
+    private readonly root: string = HOUSES_DIR,
+    private readonly publicRoot: string = PUBLIC_HOUSES_DIR,
   ) {}
 
   async listSlugs(): Promise<string[]> {

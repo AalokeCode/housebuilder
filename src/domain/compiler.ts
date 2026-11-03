@@ -28,7 +28,7 @@ import {
   signedArea,
   sub,
 } from "./geometry";
-import type { HouseSpec, ItemSpec, OpeningSpec, RoomItemsFile, RoomSpec, Vec2, Vec3 } from "./house-spec";
+import { isOutdoor, type HouseSpec, type ItemSpec, type OpeningSpec, type RoomItemsFile, type RoomSpec, type Vec2, type Vec3 } from "./house-spec";
 
 const T_EXTERIOR = 0.25;
 const T_INTERIOR = 0.12;
@@ -71,6 +71,8 @@ export class HouseCompiler {
   private rooms = new Map<string, RoomSpec>();
   private drafts: WallDraft[] = [];
   private byRoomEdge = new Map<string, WallDraft[]>();
+  /** terrace edges with no wall — still block walking so nobody steps off the deck */
+  private openEdges: [Vec2, Vec2][] = [];
   private spec!: HouseSpec;
 
   constructor(private readonly catalog: Catalog = defaultCatalog) {}
@@ -116,6 +118,7 @@ export class HouseCompiler {
     this.issues = [];
     this.drafts = [];
     this.byRoomEdge.clear();
+    this.openEdges = [];
     this.rooms = new Map(spec.rooms.map((r) => [r.id, r]));
   }
 
@@ -124,7 +127,7 @@ export class HouseCompiler {
   }
 
   private hasCeiling(r: RoomSpec): boolean {
-    return r.type !== "balcony";
+    return !isOutdoor(r.type);
   }
 
   private compileRoom(r: RoomSpec): CompiledRoom {
@@ -203,6 +206,7 @@ export class HouseCompiler {
         this.byRoomEdge.set(key, [...(this.byRoomEdge.get(key) ?? []), draft]);
       }
     }
+    this.resolveExteriorOverlaps();
   }
 
   private classify(refs: EdgeRef[], id: string): WallDraft | null {
@@ -215,6 +219,10 @@ export class HouseCompiler {
       if (r.type === "balcony") {
         return { refs: withDir, extA: 0, wall: { ...base, kind: "railing", thickness: T_RAILING, bottom: 0, top: RAILING_H, material: "glass.clear", exterior: true } };
       }
+      if (r.type === "terrace") {
+        this.openEdges.push([first.p0, first.p1]); // open deck: no wall, no railing — collider only
+        return null;
+      }
       return this.exteriorWall(withDir, first, base);
     }
 
@@ -226,7 +234,7 @@ export class HouseCompiler {
       }
       return null;
     }
-    const balcony = refs.find((r) => r.room.type === "balcony");
+    const balcony = refs.find((r) => isOutdoor(r.room.type));
     if (balcony) {
       const inner = refs.find((r) => r !== balcony)!;
       return this.exteriorWall(withDir, inner, base);
@@ -234,8 +242,77 @@ export class HouseCompiler {
     return {
       refs: withDir,
       extA: 0,
-      wall: { ...base, kind: "wall", thickness: T_INTERIOR, bottom: 0, top: Math.max(this.ceilingOf(ra), this.ceilingOf(rb)), material: this.wallMaterial(ra, refs[0].edge), exterior: false },
+      wall: {
+        ...base,
+        kind: "wall",
+        thickness: T_INTERIOR,
+        bottom: 0,
+        top: Math.max(this.ceilingOf(ra), this.ceilingOf(rb)),
+        // refs[0] runs a→b, so its room is on the wall's +z (right-hand) face; the other room sees `back`
+        material: this.wallMaterial(ra, refs[0].edge),
+        back: this.wallMaterial(rb, refs[1].edge),
+        exterior: false,
+      },
     };
+  }
+
+  private insideOtherRoom(p: Vec2, self: string): boolean {
+    return this.spec.rooms.some((o) => o.id !== self && pointInPolygon(p, o.poly));
+  }
+
+  /**
+   * Exterior walls sit outside their room, so where two of them meet at right angles (a room corner, or thick walls
+   * built from back-to-back exterior walls) their bands overlap and the coincident faces z-fight. Trim the shorter
+   * wall back to the longer one's face; drop it if nothing is left. Runs before openings are placed (extA shifts).
+   */
+  private resolveExteriorOverlaps() {
+    const box = (w: CompiledWall) => {
+      const h = w.thickness / 2;
+      const horiz = Math.abs(w.a[1] - w.b[1]) < EPS;
+      return horiz
+        ? { x0: Math.min(w.a[0], w.b[0]), x1: Math.max(w.a[0], w.b[0]), z0: w.a[1] - h, z1: w.a[1] + h, horiz }
+        : { x0: w.a[0] - h, x1: w.a[0] + h, z0: Math.min(w.a[1], w.b[1]), z1: Math.max(w.a[1], w.b[1]), horiz };
+    };
+    const axisAligned = (w: CompiledWall) => Math.abs(w.a[0] - w.b[0]) < EPS || Math.abs(w.a[1] - w.b[1]) < EPS;
+    const ext = this.drafts.filter((d) => d.wall.exterior && d.wall.kind === "wall" && axisAligned(d.wall));
+    const dead = new Set<WallDraft>();
+    for (const A of ext) {
+      for (const B of ext) {
+        if (A === B || dead.has(A) || dead.has(B)) continue;
+        const [ba, bb] = [box(A.wall), box(B.wall)];
+        if (ba.horiz === bb.horiz) continue; // parallel bands only touch back to back — faces stay hidden
+        const ox = Math.min(ba.x1, bb.x1) - Math.max(ba.x0, bb.x0);
+        const oz = Math.min(ba.z1, bb.z1) - Math.max(ba.z0, bb.z0);
+        if (ox <= 0.002 || oz <= 0.002) continue;
+        const short = dist(A.wall.a, A.wall.b) <= dist(B.wall.a, B.wall.b) ? A : B;
+        const long = short === A ? B : A;
+        const w = short.wall;
+        const lb = box(long.wall);
+        const dir = norm(sub(w.b, w.a));
+        const k = Math.abs(dir[0]) > 0.5 ? 0 : 1;
+        const [lo, hi] = k === 0 ? [lb.x0, lb.x1] : [lb.z0, lb.z1];
+        const len = dist(w.a, w.b);
+        // distance from a to the long wall's band, entering from either end
+        const ua = (dir[k] > 0 ? lo - w.a[k] : w.a[k] - hi);
+        const ub = (dir[k] > 0 ? w.b[k] - hi : lo - w.b[k]);
+        if (ua <= EPS && ub <= EPS) {
+          dead.add(short); // wholly inside the other band (e.g. a corridor stub between two thick walls)
+          continue;
+        } else if (ua <= EPS && ub > EPS) {
+          // band covers the a-end: move a forward to the band's far face
+          const cut = Math.min(len, dir[k] > 0 ? hi - w.a[k] : w.a[k] - lo);
+          w.a = add(w.a, scale(dir, cut));
+          short.extA -= cut;
+        } else if (ub <= EPS && ua > EPS) {
+          const cut = Math.min(len, dir[k] > 0 ? w.b[k] - lo : hi - w.b[k]);
+          w.b = add(w.b, scale(dir, -cut));
+        } else continue; // overlap in the middle: leave it (T into a long wall is fine)
+        if (dist(w.a, w.b) < 0.01) dead.add(short);
+      }
+    }
+    if (!dead.size) return;
+    this.drafts = this.drafts.filter((d) => !dead.has(d));
+    for (const [key, list] of this.byRoomEdge) this.byRoomEdge.set(key, list.filter((d) => !dead.has(d)));
   }
 
   /** Exterior wall sits outside the room polygon so interior dimensions stay exact. */
@@ -249,8 +326,10 @@ export class HouseCompiler {
     const edgeLen = dist(r.poly[inner.edge], r.poly[(inner.edge + 1) % n]);
     const out = scale(inwardNormal(r.poly, inner.edge), -T_EXTERIOR / 2);
     const dir = norm(sub(inner.p1, inner.p0));
-    const ext0 = inner.s0 < EPS && isConvexVertex(r.poly, inner.edge) ? T_EXTERIOR : 0;
-    const ext1 = inner.s1 > edgeLen - EPS && isConvexVertex(r.poly, (inner.edge + 1) % n) ? T_EXTERIOR : 0;
+    // convex corners get the wall extended to close the corner — unless that would push it into a neighbouring room
+    const intrudes = (p: Vec2, sign: number) => this.insideOtherRoom(add(add(p, out), scale(dir, sign * T_EXTERIOR * 0.5)), r.id);
+    const ext0 = inner.s0 < EPS && isConvexVertex(r.poly, inner.edge) && !intrudes(inner.p0, -1) ? T_EXTERIOR : 0;
+    const ext1 = inner.s1 > edgeLen - EPS && isConvexVertex(r.poly, (inner.edge + 1) % n) && !intrudes(inner.p1, 1) ? T_EXTERIOR : 0;
     let a = add(add(inner.p0, out), scale(dir, -ext0));
     let b = add(add(inner.p1, out), scale(dir, ext1));
     const innerSame = refs.find((x) => x.ref === inner)!.sameDir;
@@ -340,7 +419,7 @@ export class HouseCompiler {
   }
 
   private buildColliders(walls: CompiledWall[]): Collider[] {
-    const out: Collider[] = [];
+    const out: Collider[] = this.openEdges.map(([a, b]) => ({ a, b, radius: 0.05 }));
     for (const w of walls) {
       if (w.kind === "bulkhead") continue;
       const L = dist(w.a, w.b);

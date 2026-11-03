@@ -1,0 +1,72 @@
+{
+  "room": "living",
+  "items": [
+    {
+      "id": "builtin-north",
+      "cat": "storage.builtin.gloss-walnut",
+      "against": {
+        "edge": 0,
+        "at": 2.07
+      },
+      "size": [
+        4.16,
+        2.79,
+        0.4
+      ],
+      "note": "H05/H07 white gloss storage wall with walnut cubby band"
+    },
+    {
+      "id": "tv-stand",
+      "cat": "tv-unit.steel.walnut",
+      "against": {
+        "edge": 3,
+        "at": 1.4
+      },
+      "gap": 0.03,
+      "size": [
+        1.6,
+        0.48,
+        0.42
+      ]
+    },
+    {
+      "id": "tv",
+      "cat": "tv.75",
+      "against": {
+        "edge": 3,
+        "at": 1.4
+      },
+      "gap": 0.13,
+      "y": 0.485,
+      "note": "H05: ~0.95 m tall screen (back-projected)"
+    },
+    {
+      "id": "speaker-s",
+      "cat": "speaker.floor.black",
+      "against": {
+        "edge": 3,
+        "at": 0.4
+      },
+      "gap": 0.05
+    },
+    {
+      "id": "speaker-n",
+      "cat": "speaker.floor.black",
+      "against": {
+        "edge": 3,
+        "at": 2.4
+      },
+      "gap": 0.05
+    },
+    {
+      "id": "ac",
+      "cat": "ac.cassette.white",
+      "pos": [
+        13.0,
+        0.85
+      ],
+      "note": "H05/H07 ceiling cassette, back-projected"
+    }
+  ],
+  "decor": []
+}

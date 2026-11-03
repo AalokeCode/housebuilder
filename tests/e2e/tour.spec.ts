@@ -35,8 +35,11 @@ test("cover → explore in 3D → rooms, modes, photo compare, back", async ({ p
   const tips = page.getByRole("button", { name: "Got it" });
   if (await tips.isVisible()) await tips.click();
 
-  await page.getByRole("navigation", { name: "Rooms" }).getByRole("button", { name: "Bedroom" }).click();
-  await expect(page.locator("header").getByText("Bedroom", { exact: true })).toBeVisible();
+  // rooms are reached from the map (bottom-left corner; collapsed on small screens)
+  const showPlan = page.getByRole("button", { name: "Show floor plan" });
+  if (await showPlan.isVisible()) await showPlan.click();
+  await page.getByRole("button", { name: "Go to Bedroom" }).first().click(); // first = the in-tour map (the details page plan sits under the full-screen viewer)
+  await expect(page.locator("header p span", { hasText: /^Bedroom$/ })).toBeVisible(); // the title chip's room status
 
   await page.getByRole("button", { name: "Dollhouse" }).click();
   await expect(page.getByText("Dollhouse overview")).toBeVisible();

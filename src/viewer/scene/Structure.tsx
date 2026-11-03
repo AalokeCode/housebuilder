@@ -17,7 +17,37 @@ function wallFrame(w: CompiledWall) {
   return { len: Math.hypot(dx, dz), theta: Math.atan2(-dz, dx) };
 }
 
-function wallPieces(w: CompiledWall): THREE.BufferGeometry[] {
+/** Box faces (BoxGeometry groups): 0 +x, 1 −x, 2 +y, 3 −y, 4 +z, 5 −z. Wall local z = across the thickness. */
+function facesOf(g: THREE.BufferGeometry, groups: number[]): THREE.BufferGeometry {
+  const src = g.index!.array;
+  const idx: number[] = [];
+  for (const gi of groups) {
+    const { start, count } = g.groups[gi];
+    for (let i = start; i < start + count; i++) idx.push(src[i]);
+  }
+  const out = g.clone();
+  out.setIndex(idx);
+  out.clearGroups();
+  return out;
+}
+
+/** World-metre UVs (u along the wall, v up) so photo surfaces keep their real scale on every wall piece. */
+function metreUVs(g: THREE.BufferGeometry) {
+  const pos = g.attributes.position;
+  const nrm = g.attributes.normal;
+  const uv = g.attributes.uv;
+  for (let i = 0; i < pos.count; i++) {
+    const [x, y, z] = [pos.getX(i), pos.getY(i), pos.getZ(i)];
+    const [nx, ny] = [Math.abs(nrm.getX(i)), Math.abs(nrm.getY(i))];
+    if (ny > 0.5) uv.setXY(i, x, z);
+    else if (nx > 0.5) uv.setXY(i, z, y);
+    else uv.setXY(i, x, y);
+  }
+  uv.needsUpdate = true;
+}
+
+/** Wall pieces around its openings, split into the +z face (+ ends/top) and the −z face. */
+function wallPieces(w: CompiledWall): { front: THREE.BufferGeometry[]; back: THREE.BufferGeometry[] } {
   const { len, theta } = wallFrame(w);
   const boxes: [number, number, number, number][] = []; // u0,u1,y0,y1
   let u = 0;
@@ -29,25 +59,35 @@ function wallPieces(w: CompiledWall): THREE.BufferGeometry[] {
   }
   boxes.push([u, len, w.bottom, w.top]);
   const m = new THREE.Matrix4().makeRotationY(theta).setPosition(w.a[0], 0, w.a[1]);
-  return boxes
-    .filter(([u0, u1, y0, y1]) => u1 - u0 > 0.005 && y1 - y0 > 0.005)
-    .map(([u0, u1, y0, y1]) => {
-      const g = new THREE.BoxGeometry(u1 - u0, y1 - y0, w.thickness);
-      g.translate((u0 + u1) / 2, (y0 + y1) / 2, 0);
-      g.applyMatrix4(m);
-      return g;
-    });
+  const front: THREE.BufferGeometry[] = [];
+  const back: THREE.BufferGeometry[] = [];
+  for (const [u0, u1, y0, y1] of boxes) {
+    if (u1 - u0 <= 0.005 || y1 - y0 <= 0.005) continue;
+    const g = new THREE.BoxGeometry(u1 - u0, y1 - y0, w.thickness);
+    g.translate((u0 + u1) / 2, (y0 + y1) / 2, 0);
+    metreUVs(g);
+    g.applyMatrix4(m);
+    front.push(facesOf(g, [0, 1, 2, 3, 4]));
+    back.push(facesOf(g, [5]));
+    g.dispose();
+  }
+  return { front, back };
 }
 
 export function Walls({ house, cutaway }: { house: CompiledHouse; cutaway: boolean }) {
   const groups = useMemo(() => {
     const byMat = new Map<string, { ref: MaterialRef; geos: THREE.BufferGeometry[] }>();
+    const add = (ref: MaterialRef, geos: THREE.BufferGeometry[]) => {
+      const k = keyOf(ref);
+      const g = byMat.get(k) ?? { ref, geos: [] };
+      g.geos.push(...geos);
+      byMat.set(k, g);
+    };
     for (const w of house.walls) {
       if (w.kind === "railing") continue;
-      const k = keyOf(w.material);
-      const g = byMat.get(k) ?? { ref: w.material, geos: [] };
-      g.geos.push(...wallPieces(w));
-      byMat.set(k, g);
+      const { front, back } = wallPieces(w);
+      add(w.material, front);
+      add(w.back ?? w.material, back);
     }
     return [...byMat.values()].map(({ ref, geos }) => {
       const mat = (materials.surface(ref) as THREE.MeshStandardMaterial).clone();

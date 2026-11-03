@@ -89,6 +89,16 @@ export class Narrator {
     }, WORD_MS);
   }
 
+  /** Sentence ranges [start, end) — each is spoken as its own utterance (Chrome cuts long utterances off ~15 s). */
+  private sentences(text: string): [number, number][] {
+    return [...text.matchAll(/[^.!?]+[.!?]*["')]?/g)]
+      .map((m) => {
+        const lead = m[0].length - m[0].trimStart().length;
+        return [m.index! + lead, m.index! + m[0].trimEnd().length] as [number, number];
+      })
+      .filter(([a, b]) => b > a);
+  }
+
   /** Speak `text` once per key (re-entering the same room doesn't repeat unless `force`). */
   speak(key: string, text: string, opts: SpeakOptions = {}) {
     if (!text) return;
@@ -101,32 +111,55 @@ export class Narrator {
     if (opts.silent || !this.supported) return this.paced(text, token, opts.onEnd);
 
     this.pickVoice();
-    const u = new SpeechSynthesisUtterance(text);
-    if (this.voice) u.voice = this.voice;
-    u.rate = 0.98;
-    let gotBoundary = false;
-    let fellBack = false;
-    u.onboundary = (e) => {
-      if (token !== this.token || fellBack || (e.name && e.name !== "word")) return;
-      gotBoundary = true;
-      const rest = text.slice(e.charIndex);
-      const sp = rest.search(/\s/);
-      const end = e.charLength ? e.charIndex + e.charLength : e.charIndex + (sp < 0 ? rest.length : sp);
-      this.emit({ text, word: [e.charIndex, end] });
+    const ws = this.words(text);
+    const chunks = this.sentences(text);
+    const lastWordOf = (end: number) => {
+      let i = 0;
+      while (i + 1 < ws.length && ws[i + 1][0] < end) i++;
+      return i;
     };
-    u.onstart = () =>
-      setTimeout(() => {
-        if (token !== this.token || gotBoundary) return;
-        fellBack = true;
-        this.paced(text, token); // captions only; speech end still drives onEnd
-      }, 700);
-    u.onend = () => this.finish(token, opts.onEnd);
-    u.onerror = (e) => {
-      if (token !== this.token || e.error === "interrupted" || e.error === "canceled") return;
-      // blocked (e.g. no gesture yet) → fall back to silent captions so the guided tour keeps moving
-      this.paced(text, token, opts.onEnd);
+    // caption cursor: real word boundaries move it when the voice sends them; otherwise (many Chrome/Android voices
+    // send a few boundaries then go quiet — captions froze on the first words) a watchdog keeps it moving at speech
+    // pace, never past the sentence being spoken
+    let wi = -1;
+    let cap = 0;
+    let moved = performance.now();
+    const show = (i: number) => {
+      if (i <= wi || i >= ws.length) return;
+      wi = i;
+      moved = performance.now();
+      this.emit({ text, word: ws[i] });
     };
-    window.speechSynthesis.speak(u);
+    this.timer = setInterval(() => {
+      if (token !== this.token) return;
+      if (performance.now() - moved > WORD_MS && wi < cap) show(wi + 1);
+    }, 90);
+
+    const say = (c: number) => {
+      if (token !== this.token) return;
+      if (c >= chunks.length) return this.finish(token, opts.onEnd);
+      const [cs, ce] = chunks[c];
+      cap = lastWordOf(ce);
+      show(ws.findIndex(([a]) => a >= cs)); // first word of the sentence, as it starts
+      const u = new SpeechSynthesisUtterance(text.slice(cs, ce));
+      if (this.voice) u.voice = this.voice;
+      u.rate = 0.98;
+      u.onboundary = (e) => {
+        if (token !== this.token || (e.name && e.name !== "word")) return;
+        const at = cs + e.charIndex;
+        let i = ws.findIndex(([a, b]) => at >= a && at < b);
+        if (i < 0) i = ws.findIndex(([a]) => a >= at);
+        if (i >= 0 && i <= cap) show(i);
+      };
+      u.onend = () => say(c + 1);
+      u.onerror = (e) => {
+        if (token !== this.token || e.error === "interrupted" || e.error === "canceled") return;
+        // blocked (e.g. no gesture yet) → silent captions from here so the guided tour keeps moving
+        this.paced(text, token, opts.onEnd, Math.max(0, wi));
+      };
+      window.speechSynthesis.speak(u);
+    };
+    say(0);
   }
 
   stop() {

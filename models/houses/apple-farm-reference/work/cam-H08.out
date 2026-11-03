@@ -1,0 +1,8 @@
+{"pos": [3.42, 1.4, 1.37], "lookAt": [6.41, 1.56, 1.37], "fov": 62.2}
+rms error: 13.3 px
+  far ceiling N corner         photo [617, 895]  model [612, 897]
+  far ceiling S corner         photo [927, 895]  model [946, 897]
+  far floor N corner           photo [611, 1713]  model [608, 1728]
+  far floor S corner           photo [960, 1746]  model [949, 1728]
+  bath door E jamb top         photo [1196, 764]  model [1196, 764]
+  VP east                      photo [792, 1307]  model [793, 1308]

@@ -1,0 +1,767 @@
+{
+  "spec": "housespec/1",
+  "slug": "apple-farm-reference",
+  "meta": {
+    "title": "Apple Farm House — Reference (Pohang)",
+    "kind": "villa",
+    "ceiling": 2.8,
+    "sources": [
+      "plan",
+      "photos"
+    ],
+    "areaBrief": 123.23,
+    "status": "published",
+    "summary": "Single-storey timber-and-concrete farmhouse: open oak-lined living and kitchen under a slatted timber ceiling, a deck to the valley, and a private wing — rebuilt in 3D from the published plan and photos.",
+    "locality": "Jukjang-myeon, Pohang-si, South Korea (reference)",
+    "sky": {
+      "low": "/env/valley_bg_4k.jpg",
+      "high": "/env/valley_bg_8k.jpg",
+      "yaw": 0
+    },
+    "reviewed": "2026-11-03"
+  },
+  "rooms": [
+    {
+      "id": "master",
+      "type": "bedroom",
+      "name": "Master Bedroom",
+      "poly": [
+        [
+          0,
+          0
+        ],
+        [
+          3.55,
+          0
+        ],
+        [
+          3.55,
+          4.5
+        ],
+        [
+          0,
+          4.5
+        ]
+      ],
+      "floor": "floor.oak.strip-afh",
+      "walls": "paint.white.matte",
+      "est": true
+    },
+    {
+      "id": "corridor",
+      "type": "hall",
+      "name": "Private Corridor",
+      "poly": [
+        [
+          3.55,
+          0.75
+        ],
+        [
+          10.2,
+          0.75
+        ],
+        [
+          10.2,
+          1.95
+        ],
+        [
+          3.55,
+          1.95
+        ]
+      ],
+      "floor": "floor.oak.strip-afh",
+      "walls": "paint.white.matte",
+      "wallOverrides": {
+        "2": "concrete.board-formed.afh"
+      }
+    },
+    {
+      "id": "bathroom",
+      "type": "bathroom",
+      "name": "Bathroom",
+      "poly": [
+        [
+          4.05,
+          1.95
+        ],
+        [
+          6,
+          1.95
+        ],
+        [
+          6,
+          5.15
+        ],
+        [
+          4.05,
+          5.15
+        ]
+      ],
+      "floor": "floor.porcelain.bath",
+      "walls": "tile.wall.satin-white",
+      "est": true
+    },
+    {
+      "id": "guest",
+      "type": "bedroom",
+      "name": "Guest Room",
+      "poly": [
+        [
+          6.5,
+          1.95
+        ],
+        [
+          9.7,
+          1.95
+        ],
+        [
+          9.7,
+          5.15
+        ],
+        [
+          6.5,
+          5.15
+        ]
+      ],
+      "floor": "floor.oak.strip-afh",
+      "walls": "paint.white.matte",
+      "est": true
+    },
+    {
+      "id": "living",
+      "type": "living",
+      "name": "Living Room",
+      "poly": [
+        [
+          10.2,
+          0
+        ],
+        [
+          14.4,
+          0
+        ],
+        [
+          14.4,
+          4.65
+        ],
+        [
+          10.2,
+          4.65
+        ]
+      ],
+      "floor": "floor.oak.strip-afh",
+      "walls": "paint.white.matte",
+      "wallOverrides": {
+        "3": "panel.birch-ply.afh"
+      },
+      "ceiling": {
+        "height": 2.8,
+        "material": "ceiling.timber-slat.afh"
+      },
+      "openTo": [
+        "kitchen"
+      ]
+    },
+    {
+      "id": "kitchen",
+      "type": "kitchen",
+      "name": "Kitchen & Dining",
+      "poly": [
+        [
+          14.4,
+          0
+        ],
+        [
+          17.75,
+          0
+        ],
+        [
+          17.75,
+          1.65
+        ],
+        [
+          19,
+          1.65
+        ],
+        [
+          19,
+          5.1
+        ],
+        [
+          14.85,
+          5.1
+        ],
+        [
+          14.85,
+          4.65
+        ],
+        [
+          14.4,
+          4.65
+        ]
+      ],
+      "floor": "floor.oak.strip-afh",
+      "walls": "paint.white.matte",
+      "ceiling": {
+        "height": 2.8,
+        "material": "ceiling.timber-slat.afh"
+      }
+    },
+    {
+      "id": "entrance",
+      "type": "hall",
+      "name": "Entrance",
+      "poly": [
+        [
+          17.75,
+          0
+        ],
+        [
+          20.55,
+          0
+        ],
+        [
+          20.55,
+          1.65
+        ],
+        [
+          17.75,
+          1.65
+        ]
+      ],
+      "floor": "floor.stone.entry",
+      "walls": "paint.white.matte",
+      "est": true
+    },
+    {
+      "id": "utility",
+      "type": "other",
+      "name": "Utility",
+      "poly": [
+        [
+          19,
+          1.65
+        ],
+        [
+          20.4,
+          1.65
+        ],
+        [
+          20.4,
+          5.1
+        ],
+        [
+          19,
+          5.1
+        ]
+      ],
+      "floor": "floor.porcelain.bath",
+      "walls": "paint.white.matte",
+      "est": true
+    },
+    {
+      "id": "deck",
+      "type": "terrace",
+      "name": "Deck",
+      "poly": [
+        [
+          10.2,
+          4.65
+        ],
+        [
+          14.4,
+          4.65
+        ],
+        [
+          14.4,
+          8.35
+        ],
+        [
+          10.2,
+          8.35
+        ]
+      ],
+      "floor": "deck.timber.afh",
+      "walls": "paint.white.matte"
+    }
+  ],
+  "openings": [
+    {
+      "id": "d-master",
+      "kind": "door",
+      "between": [
+        "corridor",
+        "master"
+      ],
+      "at": 0.3,
+      "w": 0.85,
+      "h": 2.1,
+      "swing": "out-left",
+      "leaf": "door.white.flush",
+      "est": true
+    },
+    {
+      "id": "d-bath",
+      "kind": "door",
+      "between": [
+        "bathroom",
+        "corridor"
+      ],
+      "at": 1.1,
+      "w": 0.8,
+      "h": 2.1,
+      "swing": "in-right",
+      "leaf": "door.white.flush",
+      "est": true
+    },
+    {
+      "id": "d-guest",
+      "kind": "door",
+      "between": [
+        "guest",
+        "corridor"
+      ],
+      "at": 2.2,
+      "w": 0.85,
+      "h": 2.1,
+      "swing": "in-right",
+      "leaf": "door.white.flush",
+      "est": true
+    },
+    {
+      "id": "d-corridor",
+      "kind": "door",
+      "between": [
+        "corridor",
+        "living"
+      ],
+      "at": 0.1,
+      "w": 1,
+      "h": 2.5,
+      "swing": "out-right",
+      "est": true,
+      "leaf": "door.plywood"
+    },
+    {
+      "id": "d-entry-hall",
+      "kind": "door",
+      "between": [
+        "kitchen",
+        "entrance"
+      ],
+      "at": 0.02,
+      "w": 1.25,
+      "h": 2.4,
+      "swing": "in-left",
+      "est": true,
+      "leaf": "door.plywood"
+    },
+    {
+      "id": "d-utility",
+      "kind": "door",
+      "between": [
+        "kitchen",
+        "utility"
+      ],
+      "at": 0.95,
+      "w": 0.85,
+      "h": 2.1,
+      "swing": "in-left",
+      "leaf": "door.white.flush",
+      "est": true
+    },
+    {
+      "id": "d-front",
+      "kind": "entrance",
+      "room": "entrance",
+      "edge": 1,
+      "at": 0.1,
+      "w": 1,
+      "h": 2.2,
+      "leaf": "door.entrance.walnut",
+      "est": true
+    },
+    {
+      "id": "g-living",
+      "kind": "slider",
+      "between": [
+        "living",
+        "deck"
+      ],
+      "at": 0.05,
+      "w": 4.1,
+      "h": 2.4,
+      "sill": 0,
+      "frame": "frame.timber.warm"
+    },
+    {
+      "id": "w-kitchen",
+      "kind": "window",
+      "room": "kitchen",
+      "edge": 4,
+      "at": 0.75,
+      "w": 2.5,
+      "h": 0.8,
+      "sill": 1.05,
+      "frame": "frame.timber.warm",
+      "est": true
+    },
+    {
+      "id": "w-master",
+      "kind": "window",
+      "room": "master",
+      "edge": 2,
+      "at": 0.55,
+      "w": 2.45,
+      "h": 0.7,
+      "sill": 1,
+      "frame": "frame.alu.black",
+      "est": true
+    },
+    {
+      "id": "w-bath",
+      "kind": "window",
+      "room": "bathroom",
+      "edge": 2,
+      "at": 1.3,
+      "w": 0.6,
+      "h": 0.6,
+      "sill": 1.3,
+      "frame": "frame.alu.black",
+      "est": true
+    },
+    {
+      "id": "w-guest",
+      "kind": "window",
+      "room": "guest",
+      "edge": 2,
+      "at": 0.15,
+      "w": 2.4,
+      "h": 0.7,
+      "sill": 1,
+      "frame": "frame.alu.black",
+      "est": true
+    },
+    {
+      "id": "w-utility",
+      "kind": "window",
+      "room": "utility",
+      "edge": 2,
+      "at": 0.6,
+      "w": 0.6,
+      "h": 0.6,
+      "sill": 1.3,
+      "frame": "frame.alu.black",
+      "est": true
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "kitchen-south",
+      "kind": "kitchen",
+      "room": "kitchen",
+      "edge": 4,
+      "from": 0.65,
+      "to": 3.75,
+      "base": "cab.gloss.white",
+      "top": "counter.dark.stone",
+      "est": true
+    },
+    {
+      "id": "kitchen-east",
+      "kind": "kitchen",
+      "room": "kitchen",
+      "edge": 3,
+      "from": 1.85,
+      "to": 3.44,
+      "base": "cab.gloss.white",
+      "top": "counter.dark.stone",
+      "upper": "cab.gloss.white",
+      "splash": "tile.splash.taupe",
+      "appliances": [
+        {
+          "cat": "appliance.cooker.60.steel",
+          "at": 0.6
+        }
+      ],
+      "est": true
+    }
+  ],
+  "items": "work/rooms/*.items.json",
+  "lights": [
+    {
+      "room": "living",
+      "kind": "downlight",
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "room": "kitchen",
+      "kind": "downlight",
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "room": "kitchen",
+      "kind": "linear",
+      "line": [
+        [
+          16.9,
+          3.3
+        ],
+        [
+          18.3,
+          3.3
+        ]
+      ]
+    },
+    {
+      "room": "kitchen",
+      "kind": "linear",
+      "line": [
+        [
+          16.9,
+          3.9
+        ],
+        [
+          18.3,
+          3.9
+        ]
+      ]
+    },
+    {
+      "room": "corridor",
+      "kind": "downlight",
+      "grid": [
+        3,
+        1
+      ]
+    },
+    {
+      "room": "master",
+      "kind": "downlight",
+      "grid": [
+        2,
+        2
+      ]
+    },
+    {
+      "room": "guest",
+      "kind": "downlight",
+      "grid": [
+        2,
+        2
+      ]
+    },
+    {
+      "room": "bathroom",
+      "kind": "downlight",
+      "grid": [
+        1,
+        2
+      ]
+    },
+    {
+      "room": "entrance",
+      "kind": "downlight",
+      "grid": [
+        2,
+        1
+      ]
+    },
+    {
+      "room": "utility",
+      "kind": "downlight",
+      "grid": [
+        1,
+        2
+      ]
+    }
+  ],
+  "hotspots": [
+    {
+      "id": "hs-entrance",
+      "room": "entrance",
+      "pos": [
+        19.2,
+        0.8
+      ],
+      "look": [
+        16,
+        2.5
+      ],
+      "label": "Entrance"
+    },
+    {
+      "id": "hs-kitchen",
+      "room": "kitchen",
+      "pos": [
+        17,
+        3.6
+      ],
+      "look": [
+        18.6,
+        4.6
+      ],
+      "label": "Kitchen & dining"
+    },
+    {
+      "id": "hs-living",
+      "room": "living",
+      "pos": [
+        13.6,
+        2.6
+      ],
+      "look": [
+        10.2,
+        2
+      ],
+      "label": "Living room"
+    },
+    {
+      "id": "hs-deck",
+      "room": "deck",
+      "pos": [
+        12.3,
+        6.4
+      ],
+      "look": [
+        12.3,
+        12
+      ],
+      "label": "Deck & valley view"
+    },
+    {
+      "id": "hs-corridor-e",
+      "room": "corridor",
+      "pos": [
+        9.4,
+        1.35
+      ],
+      "look": [
+        3.6,
+        1.35
+      ],
+      "label": "Private wing"
+    },
+    {
+      "id": "hs-corridor-m",
+      "room": "corridor",
+      "pos": [
+        7,
+        1.35
+      ]
+    },
+    {
+      "id": "hs-corridor-w",
+      "room": "corridor",
+      "pos": [
+        4.6,
+        1.35
+      ]
+    },
+    {
+      "id": "hs-master",
+      "room": "master",
+      "pos": [
+        2.6,
+        2.4
+      ],
+      "look": [
+        0.5,
+        2.4
+      ]
+    },
+    {
+      "id": "hs-bath",
+      "room": "bathroom",
+      "pos": [
+        5.1,
+        2.7
+      ]
+    },
+    {
+      "id": "hs-guest",
+      "room": "guest",
+      "pos": [
+        8.3,
+        3.2
+      ]
+    },
+    {
+      "id": "hs-utility",
+      "room": "utility",
+      "pos": [
+        19.7,
+        2.4
+      ]
+    }
+  ],
+  "tour": [
+    "hs-entrance",
+    "hs-kitchen",
+    "hs-living",
+    "hs-deck",
+    "hs-corridor-e"
+  ],
+  "photoCams": [
+    {
+      "photo": "H05",
+      "pos": [
+        16.82,
+        1.2,
+        0.95
+      ],
+      "lookAt": [
+        14.08,
+        1.32,
+        2.16
+      ],
+      "fov": 57.8
+    },
+    {
+      "photo": "H07",
+      "pos": [
+        10.3,
+        0.94,
+        2.08
+      ],
+      "lookAt": [
+        13.27,
+        1.33,
+        2
+      ],
+      "fov": 71.5
+    },
+    {
+      "photo": "H08",
+      "pos": [
+        3.42,
+        1.4,
+        1.37
+      ],
+      "lookAt": [
+        6.41,
+        1.56,
+        1.37
+      ],
+      "fov": 62.2
+    }
+  ],
+  "narration": {
+    "_intro": "Welcome to Apple Farm House, a single-storey home of timber and board-marked concrete set in an orchard valley near Pohang. This tour is rebuilt from the architect's plan and published photos.",
+    "entrance": "You arrive under the folded concrete canopy. The entrance hall keeps shoes and coats out of the living space; its finishes weren't photographed, so they're estimated.",
+    "kitchen": "The kitchen and dining area share one long room with the living space. A white gloss kitchen wraps the corner under a window, with a solid oak table beneath twin pendants.",
+    "living": "The living room is lined in oak and birch plywood under a slatted timber ceiling. A full-height built-in runs the north wall, and wide timber-framed glazing opens to the deck.",
+    "deck": "The deck steps straight out from the living room toward the fields and the mountains beyond.",
+    "corridor": "A quiet corridor of board-marked concrete leads to the private wing: the guest room, the bathroom and the master bedroom at the far end.",
+    "master": "The master bedroom sits at the west end with a long wardrobe wall. It wasn't photographed, so its layout follows the plan and its finishes are estimated.",
+    "bathroom": "The bathroom follows the plan's layout of basin, WC and shower. It wasn't photographed, so these finishes are estimated.",
+    "guest": "The guest room has a wardrobe wall and a long low window to the south. It wasn't photographed, so its finishes are estimated.",
+    "utility": "The utility room behind the kitchen holds laundry and storage. It's shown from the plan only."
+  }
+}

@@ -59,6 +59,20 @@ class MaterialFactory {
     return m;
   }
 
+  /** Tiled photo surface: mirrored repeat hides seams of a non-tileable crop. */
+  private surfaceImage(url: string, tile: [number, number]): THREE.Texture {
+    const key = `s:${url}:${tile.join("x")}`;
+    const hit = this.textures.get(key);
+    if (hit) return hit;
+    const t = this.loader!.load(asset(url), () => this.onLoad());
+    t.wrapS = t.wrapT = THREE.MirroredRepeatWrapping;
+    t.repeat.set(1 / tile[0], 1 / tile[1]);
+    t.anisotropy = 8;
+    t.colorSpace = THREE.SRGBColorSpace;
+    this.textures.set(key, t);
+    return t;
+  }
+
   /** Image texture from /public (e.g. artwork cropped from reference photos). */
   picture(url: string): THREE.Texture {
     const t = this.image(url, true, 1);
@@ -81,6 +95,11 @@ class MaterialFactory {
       side: def.opacity !== undefined ? THREE.DoubleSide : THREE.FrontSide,
     });
     if (def.texture) mat.map = this.texture(def.texture, def.color);
+    if (def.image) {
+      // the photo carries the colour; `color` stays as the loading tint, so draw the map un-tinted
+      mat.color.set("#ffffff");
+      mat.map = this.surfaceImage(def.image, def.tile ?? [1, 1]);
+    }
     this.cache.set(key, mat);
     return mat;
   }

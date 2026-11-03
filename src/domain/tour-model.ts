@@ -1,6 +1,6 @@
 import type { CompiledHouse, CompiledRoom } from "./compiled";
 import { centroid, pointInPolygon, pointSegment } from "./geometry";
-import type { Vec2 } from "./house-spec";
+import { isOutdoor, type Vec2 } from "./house-spec";
 
 /**
  * Buyer-facing view of a compiled house: facts, room evidence, guided-tour stops.
@@ -24,6 +24,8 @@ export interface TourFacts {
   /** m², rooms except balcony — derived from the 3D model, so always approximate */
   interiorArea: number;
   outdoorArea: number;
+  /** what the outdoor area is called on the facts row */
+  outdoorLabel: "balcony" | "deck" | "outdoor";
   rooms: number;
   /** any room geometry estimated rather than measured */
   estimated: boolean;
@@ -70,13 +72,15 @@ export function roomAt(house: Pick<CompiledHouse, "rooms">, p: Vec2): CompiledRo
 }
 
 export function tourFacts(house: CompiledHouse): TourFacts {
-  const interior = house.rooms.filter((r) => r.type !== "balcony");
+  const interior = house.rooms.filter((r) => !isOutdoor(r.type));
+  const outdoor = house.rooms.filter((r) => isOutdoor(r.type));
   const round = (n: number) => Math.round(n * 10) / 10;
   return {
     bedrooms: house.rooms.filter((r) => r.type === "bedroom").length,
     bathrooms: house.rooms.filter((r) => r.type === "bathroom").length,
     interiorArea: round(interior.reduce((a, r) => a + r.area, 0)),
-    outdoorArea: round(house.rooms.filter((r) => r.type === "balcony").reduce((a, r) => a + r.area, 0)),
+    outdoorArea: round(outdoor.reduce((a, r) => a + r.area, 0)),
+    outdoorLabel: outdoor.every((r) => r.type === "balcony") ? "balcony" : outdoor.every((r) => r.type === "terrace") ? "deck" : "outdoor",
     rooms: house.rooms.length,
     estimated: house.rooms.some((r) => r.est),
   };
@@ -171,6 +175,6 @@ export function planGeometry(house: CompiledHouse, pad = 0.4) {
   const [x1, z1] = house.bounds.max;
   return {
     viewBox: `${x0 - pad} ${z0 - pad} ${x1 - x0 + pad * 2} ${z1 - z0 + pad * 2}`,
-    rooms: house.rooms.map((r) => ({ id: r.id, name: r.name, est: r.est, balcony: r.type === "balcony", d: `M${r.poly.map((p) => p.join(" ")).join("L")}Z`, label: centroid(r.poly) })),
+    rooms: house.rooms.map((r) => ({ id: r.id, name: r.name, est: r.est, balcony: isOutdoor(r.type), d: `M${r.poly.map((p) => p.join(" ")).join("L")}Z`, label: centroid(r.poly) })),
   };
 }

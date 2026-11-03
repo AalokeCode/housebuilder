@@ -1,0 +1,204 @@
+{
+  "fixture_format": "property-intake/1",
+  "fixture_id": "home-apple-farm",
+  "purpose": "Source-backed property intake with separately labelled synthetic agency fields. Not a HouseSpec.",
+  "identity": {
+    "name": {
+      "value": "Apple Farm House",
+      "status": "source-reported",
+      "source": "https://www.archdaily.com/874792/apple-farm-house-2m2-architects"
+    },
+    "architect": {
+      "value": "2m2 architects",
+      "status": "source-reported",
+      "source": "https://www.archdaily.com/874792/apple-farm-house-2m2-architects"
+    },
+    "locality": {
+      "value": "Sang-ok-ri, Jukjang-myeon, Buk-gu, Pohang-si, South Korea",
+      "status": "source-reported",
+      "source": "https://www.homify.co.kr/photo/2263416/apple-farm-house"
+    },
+    "street_address": {
+      "value": null,
+      "status": "not-supplied"
+    },
+    "completion_year": {
+      "value": 2016,
+      "status": "source-reported",
+      "source": "https://www.archdaily.com/874792/apple-farm-house-2m2-architects"
+    }
+  },
+  "areas": {
+    "site": {
+      "value": 586,
+      "status": "source-reported",
+      "source": "https://www.homify.co.kr/photo/2263416/apple-farm-house",
+      "unit": "m2"
+    },
+    "building": {
+      "value": 123.23,
+      "status": "source-reported",
+      "source": "https://www.homify.co.kr/photo/2263416/apple-farm-house",
+      "unit": "m2"
+    },
+    "total_floor": {
+      "value": 123.23,
+      "status": "source-reported",
+      "source": "https://www.homify.co.kr/photo/2263416/apple-farm-house",
+      "note": "Not a verified net usable/carpet measurement.",
+      "unit": "m2"
+    },
+    "publication_rounded": {
+      "value": 123,
+      "status": "source-reported",
+      "source": "https://www.archdaily.com/874792/apple-farm-house-2m2-architects",
+      "unit": "m2"
+    },
+    "original_client_area_brief": {
+      "value": 100,
+      "status": "source-reported",
+      "source": "https://www.archdaily.com/874792/apple-farm-house-2m2-architects",
+      "note": "A design brief, not the final measured floor area.",
+      "unit": "m2"
+    },
+    "net_usable": {
+      "value": null,
+      "status": "not-supplied"
+    }
+  },
+  "program": {
+    "bedrooms": {
+      "value": 2,
+      "status": "plan-observed",
+      "source": "H13",
+      "note": "Masterroom plus guestroom; guestroom shown as flexible floor space."
+    },
+    "bathrooms": {
+      "value": 1,
+      "status": "plan-observed",
+      "source": "H13"
+    },
+    "levels_above_ground": {
+      "value": 1,
+      "status": "plan-observed",
+      "source": "H13/H15"
+    },
+    "parking_spaces": {
+      "value": null,
+      "status": "not-supplied"
+    },
+    "ceiling_height": {
+      "value": null,
+      "status": "not-supplied"
+    }
+  },
+  "room_schedule": [
+    {
+      "plan_number": 1,
+      "name": "Entrance",
+      "dimensions_m": null,
+      "area_m2": null,
+      "evidence": "H13",
+      "geometry_status": "trace-required"
+    },
+    {
+      "plan_number": 2,
+      "name": "Utility",
+      "dimensions_m": null,
+      "area_m2": null,
+      "evidence": "H13",
+      "geometry_status": "trace-required"
+    },
+    {
+      "plan_number": 3,
+      "name": "Kitchen",
+      "dimensions_m": null,
+      "area_m2": null,
+      "evidence": "H13",
+      "geometry_status": "trace-required"
+    },
+    {
+      "plan_number": 4,
+      "name": "Living",
+      "dimensions_m": null,
+      "area_m2": null,
+      "evidence": "H13",
+      "geometry_status": "trace-required"
+    },
+    {
+      "plan_number": 5,
+      "name": "Guestroom",
+      "dimensions_m": null,
+      "area_m2": null,
+      "evidence": "H13",
+      "geometry_status": "trace-required"
+    },
+    {
+      "plan_number": 6,
+      "name": "Bathroom",
+      "dimensions_m": null,
+      "area_m2": null,
+      "evidence": "H13",
+      "geometry_status": "trace-required"
+    },
+    {
+      "plan_number": 7,
+      "name": "Masterroom",
+      "dimensions_m": null,
+      "area_m2": null,
+      "evidence": "H13",
+      "geometry_status": "trace-required"
+    },
+    {
+      "plan_number": 8,
+      "name": "Storage",
+      "dimensions_m": null,
+      "area_m2": null,
+      "evidence": "H13",
+      "geometry_status": "trace-required"
+    },
+    {
+      "plan_number": 9,
+      "name": "Boilerroom",
+      "dimensions_m": null,
+      "area_m2": null,
+      "evidence": "H13",
+      "geometry_status": "trace-required"
+    }
+  ],
+  "geometry": {
+    "units": "m",
+    "plan_axes": "Repo convention: x east, z south, y up; rotate after establishing source orientation.",
+    "scale_status": "conflict-needs-verification",
+    "warning": "Published 0-10 m bar yields an apparent enclosed extent around 39 x 10 m when read literally, inconsistent with 123.23 m2. This is a rough image check, not a measured footprint. Do not use it for authoritative dimensions.",
+    "approved_room_dimensions": null,
+    "outside_spaces": [
+      "timber deck",
+      "covered work/entry area"
+    ],
+    "detached_orchard_in_title": null
+  },
+  "synthetic_agency_scenario": {
+    "status": "fictional-test-data",
+    "agency": "Fieldnote Property Studio (fictional)",
+    "listing_reference": "TRAIN-H-001",
+    "contact_email": "home-intake@example.com",
+    "campaign_type": "private viewing / sale intake",
+    "asking_price": 680000000,
+    "currency": "KRW",
+    "price_is_actual": false,
+    "viewing_notice_hours": 48,
+    "vendor_occupancy": "owner-occupied (scenario only)",
+    "furnishing": "built-ins included; movable items excluded (scenario only)"
+  },
+  "missing_documents": [
+    "measured/as-built drawing",
+    "title and cadastral map",
+    "building register/approvals",
+    "energy and services records",
+    "vendor condition disclosure"
+  ],
+  "media_manifest": "media-manifest.json",
+  "source_snapshot_date": "2026-11-03",
+  "legal_status": "No title, ownership, listing availability or compliance verification performed."
+}

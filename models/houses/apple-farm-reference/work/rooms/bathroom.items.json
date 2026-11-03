@@ -1,0 +1,47 @@
+{
+  "room": "bathroom",
+  "items": [
+    {
+      "id": "vanity",
+      "cat": "bath.vanity.wall-hung",
+      "against": {
+        "edge": 3,
+        "at": 2.2
+      },
+      "est": true
+    },
+    {
+      "id": "wc",
+      "cat": "bath.wc.wall-hung",
+      "against": {
+        "edge": 1,
+        "at": 1.75
+      },
+      "est": true
+    },
+    {
+      "id": "shower",
+      "cat": "bath.shower.walk-in",
+      "pos": [
+        5.4,
+        4.6
+      ],
+      "size": [
+        1.0,
+        2.2,
+        0.9
+      ],
+      "est": true
+    },
+    {
+      "id": "towel-rail",
+      "cat": "bath.towel-rail",
+      "against": {
+        "edge": 3,
+        "at": 0.9
+      },
+      "est": true
+    }
+  ],
+  "decor": []
+}

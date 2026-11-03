@@ -1,0 +1,31 @@
+{
+  "room": "master",
+  "items": [
+    {
+      "id": "wardrobe",
+      "cat": "storage.wardrobe.white",
+      "against": {
+        "edge": 0,
+        "at": 1.75
+      },
+      "size": [
+        3.4,
+        2.4,
+        0.6
+      ],
+      "est": true,
+      "note": "plan: wardrobe wall"
+    },
+    {
+      "id": "bed",
+      "cat": "bed.queen.upholstered-grey",
+      "against": {
+        "edge": 3,
+        "at": 1.85
+      },
+      "est": true,
+      "note": "plan only; finishes unknown"
+    }
+  ],
+  "decor": []
+}

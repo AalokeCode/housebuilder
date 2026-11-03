@@ -34,7 +34,19 @@
     "bed.queen.upholstered-grey": {"builder": "bed", "mount": "floor", "size": [1.75, 1.15, 2.15], "colors": {"frame": "#a9a59e", "sheet": "#f6f6f3", "throw": "#8ea6c3", "pillow": "#f1f1ee", "accent": "#6c7c94"}, "license": "generated (TRELLIS, MIT model) from listing photo 01b", "source": "trellis:dubai-1br-sample/01b"},
     "nightstand.walnut": {"builder": "nightstand", "mount": "floor", "size": [0.5, 0.55, 0.42], "colors": {"wood": "#4b3428"}, "license": "procedural"},
     "outdoor.bistro-set": {"builder": "bistro", "mount": "floor", "size": [1.5, 0.95, 0.8], "colors": {"metal": "#2a2a2a", "top": "#3a3a3a"}, "license": "CC0", "model": "/models/outdoor_table_chair_set_01/outdoor_table_chair_set_01.glb", "source": "polyhaven:outdoor_table_chair_set_01"},
-    "appliance.cooker.60.steel": {"builder": "cooker", "mount": "floor", "size": [0.6, 0.9, 0.6], "colors": {"steel": "#bfc1c2", "glass": "#141516"}, "license": "procedural"}
+    "appliance.cooker.60.steel": {"builder": "cooker", "mount": "floor", "size": [0.6, 0.9, 0.6], "colors": {"steel": "#bfc1c2", "glass": "#141516"}, "license": "procedural"},
+    "storage.builtin.gloss-walnut": {"builder": "builtIn", "mount": "floor", "size": [4.1, 2.8, 0.4], "colors": {"body": "#ecebe8", "cubby": "#5a3d27", "band": "0.85,1.55"}, "license": "procedural (apple-farm-reference H05/H07)"},
+    "storage.wardrobe.white": {"builder": "builtIn", "mount": "floor", "size": [3.0, 2.4, 0.6], "colors": {"body": "#efeeeb"}, "license": "procedural"},
+    "storage.tall.white": {"builder": "builtIn", "mount": "floor", "size": [0.9, 2.4, 0.65], "colors": {"body": "#ecebe8"}, "license": "procedural"},
+    "storage.tall.plywood": {"builder": "builtIn", "mount": "floor", "size": [0.9, 2.4, 0.6], "colors": {"body": "#c9a679"}, "license": "procedural (H07 birch-ply tall unit)"},
+    "dining-table.rect.oak": {"builder": "rectTable", "mount": "floor", "size": [1.8, 0.74, 0.85], "colors": {"wood": "#b5803f"}, "license": "procedural (H07)"},
+    "dining-chair.shell.black": {"builder": "shellChair", "mount": "floor", "size": [0.47, 0.8, 0.52], "colors": {"shell": "#232020", "wood": "#9c6b38"}, "license": "procedural (H07)"},
+    "tv-unit.steel.walnut": {"builder": "mediaUnit", "mount": "floor", "size": [1.75, 0.48, 0.42], "colors": {"frame": "#1e1e1e", "wood": "#8a5f3b", "top": "#efeeea"}, "license": "procedural (H05)"},
+    "tv.75": {"builder": "tv", "mount": "floor", "size": [1.68, 1.05, 0.22], "colors": {"screen": "#0d0e10", "frame": "#1b1b1c"}, "license": "procedural"},
+    "speaker.floor.black": {"builder": "speaker", "mount": "floor", "size": [0.25, 0.65, 0.3], "colors": {"body": "#161616"}, "license": "procedural (H05)"},
+    "light.pendant.cone-white": {"builder": "conePendant", "mount": "ceiling", "size": [0.2, 1.0, 0.2], "colors": {"shade": "#f4f3f0"}, "license": "procedural (H07)"},
+    "ac.cassette.white": {"builder": "acCassette", "mount": "ceiling", "size": [0.95, 0.06, 0.95], "colors": {"body": "#f2f2ef"}, "license": "procedural (H05/H07)"},
+    "panel.fin.white": {"builder": "panel", "mount": "floor", "size": [0.06, 2.8, 0.95], "colors": {"body": "#ecebe8"}, "license": "procedural (H07 partition fin)"}
   },
   "materials": {
     "paint.white.matte": {"color": "#f3f2ef", "rough": 0.95},
@@ -49,6 +61,18 @@
     "frame.alu.black": {"color": "#1f2022", "rough": 0.4, "metal": 0.6},
     "door.greige": {"color": "#d4cec4", "rough": 0.55},
     "door.entrance.walnut": {"color": "#6b4c37", "rough": 0.5},
+    "floor.oak.strip-afh": {"color": "#c8a06a", "rough": 0.35, "image": "/houses/apple-farm-reference/tex-oak.jpg", "tile": [1.15, 1.05]},
+    "ceiling.timber-slat.afh": {"color": "#c8915a", "rough": 0.75, "image": "/houses/apple-farm-reference/tex-slat.jpg", "tile": [0.75, 1.9]},
+    "panel.birch-ply.afh": {"color": "#d9bf98", "rough": 0.6, "image": "/houses/apple-farm-reference/tex-ply.jpg", "tile": [2.05, 1.3]},
+    "concrete.board-formed.afh": {"color": "#8f8d86", "rough": 0.9, "image": "/houses/apple-farm-reference/tex-concrete.jpg", "tile": [1.95, 2.35]},
+    "deck.timber.afh": {"color": "#c9c4bd", "rough": 0.85, "image": "/houses/apple-farm-reference/tex-deck.jpg", "tile": [0.7, 1.0]},
+    "frame.timber.warm": {"color": "#6e4a2f", "rough": 0.5},
+    "door.plywood": {"color": "#d2b48a", "rough": 0.55},
+    "door.white.flush": {"color": "#e8e6e0", "rough": 0.5},
+    "cab.gloss.white": {"color": "#ecebe8", "rough": 0.18},
+    "counter.dark.stone": {"color": "#2a2622", "rough": 0.3},
+    "tile.splash.taupe": {"color": "#bdb1a0", "rough": 0.35},
+    "floor.stone.entry": {"color": "#a9a59d", "rough": 0.8, "texture": "speckle"},
     "glass.clear": {"color": "#d4e4ea", "rough": 0.05, "opacity": 0.16}
   }
 }

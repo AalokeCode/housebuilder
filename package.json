@@ -20,12 +20,14 @@
     "house:publish": "tsx scripts/house-publish.ts",
     "assets:optimize": "tsx scripts/optimize-models.ts",
     "assets:manifest": "tsx scripts/asset-manifest.ts",
-    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm house:validate dubai-1br-sample && pnpm site:validate bay-residences-sample"
+    "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm house:validate dubai-1br-sample && pnpm house:validate apple-farm-reference && pnpm site:validate bay-residences-sample"
   },
   "dependencies": {
+    "@gsap/react": "2.1.2",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.2",
     "@react-three/postprocessing": "^3.2.2",
+    "gsap": "3.15.0",
     "lucide-react": "^1.66.0",
     "next": "16.4.3",
     "postprocessing": "^6.39.5",

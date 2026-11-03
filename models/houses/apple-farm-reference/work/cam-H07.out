@@ -1,0 +1,8 @@
+{"pos": [10.3, 0.94, 2.08], "lookAt": [13.27, 1.33, 2.0], "fov": 71.5}
+rms error: 29.2 px
+  far N corner floor (entrance wall) photo [750, 888]  model [769, 882]
+  entrance bifold right jamb, floor (1.25 m opening per plan) photo [906, 888]  model [922, 883]
+  living/kitchen stub corner floor photo [1602, 1008]  model [1622, 986]
+  stub corner ceiling          photo [1602, 383]  model [1569, 367]
+  built-in E end, floor        photo [664, 930]  model [654, 975]
+  VP east (floor lines)        photo [1034, 772]  model [1025, 765]

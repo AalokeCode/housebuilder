@@ -25,7 +25,10 @@ export interface CompiledWall {
   thickness: number;
   bottom: number;
   top: number;
+  /** face on the wall's right-hand side walking a→b (local +z) — the side of the room listed first */
   material: MaterialRef;
+  /** face on the left-hand side (local −z); defaults to `material` */
+  back?: MaterialRef;
   rooms: string[];
   exterior: boolean;
   openings: CompiledOpening[];

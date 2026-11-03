@@ -1,0 +1,20 @@
+{
+  "room": "guest",
+  "items": [
+    {
+      "id": "wardrobe",
+      "cat": "storage.wardrobe.white",
+      "against": {
+        "edge": 3,
+        "at": 1.6
+      },
+      "size": [
+        3.0,
+        2.4,
+        0.6
+      ],
+      "est": true
+    }
+  ],
+  "decor": []
+}

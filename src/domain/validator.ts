@@ -2,7 +2,7 @@ import { BODY, walkBlocked } from "./collision";
 import { Catalog, catalog as defaultCatalog } from "./catalog";
 import type { CompiledHouse, CompiledItem, Issue } from "./compiled";
 import { footprint, obbOverlap, pointInPolygon, pointInPolygonOrOnEdge, pointSegment, signedArea } from "./geometry";
-import type { HouseSpec, RoomItemsFile, Vec2 } from "./house-spec";
+import { isOutdoor, type HouseSpec, type RoomItemsFile, type Vec2 } from "./house-spec";
 
 export interface ValidateOptions {
   /** only shell checks (rooms, openings, fixtures) */
@@ -35,7 +35,7 @@ export class HouseValidator {
       else if (!pointInPolygon(h.pos, r.poly)) push("error", "hotspot-outside", h.id, `hotspot not inside ${h.room}`);
     }
     for (const r of spec.rooms) {
-      if (r.type !== "balcony" && !spec.hotspots.some((h) => h.room === r.id)) push("warn", "room-no-hotspot", r.id, "room has no hotspot");
+      if (!isOutdoor(r.type) && !spec.hotspots.some((h) => h.room === r.id)) push("warn", "room-no-hotspot", r.id, "room has no hotspot");
     }
     for (const k of Object.keys(spec.narration)) {
       if (k !== "_intro" && !spec.rooms.some((r) => r.id === k)) push("error", "narration-room", k, "narration key is not a room id");

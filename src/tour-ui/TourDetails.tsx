@@ -10,7 +10,7 @@ export function FactsRow({ house, className = "" }: { house: CompiledHouse; clas
     f.bedrooms ? `${f.bedrooms} bed${f.bedrooms > 1 ? "s" : ""}` : "Studio",
     f.bathrooms ? `${f.bathrooms} bath${f.bathrooms > 1 ? "s" : ""}` : null,
     `≈ ${Math.round(f.interiorArea)} m² inside`,
-    f.outdoorArea ? `≈ ${Math.round(f.outdoorArea)} m² balcony` : null,
+    f.outdoorArea ? `≈ ${Math.round(f.outdoorArea)} m² ${f.outdoorLabel}` : null,
   ].filter(Boolean);
   return (
     <ul className={`flex flex-wrap gap-x-3 gap-y-1 text-sm ${className}`}>

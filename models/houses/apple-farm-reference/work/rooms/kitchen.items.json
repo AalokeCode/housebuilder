@@ -1,0 +1,112 @@
+{
+  "room": "kitchen",
+  "items": [
+    {
+      "id": "partition",
+      "cat": "panel.fin.white",
+      "pos": [
+        15.68,
+        1.56
+      ],
+      "size": [
+        2.04,
+        2.79,
+        0.08
+      ],
+      "note": "H07 white fin = end of a full-height partition between entrance passage and dining (plan line)"
+    },
+    {
+      "id": "dining-table",
+      "cat": "dining-table.rect.oak",
+      "pos": [
+        15.55,
+        2.55
+      ],
+      "rotY": 90,
+      "note": "H07 legs back-projected"
+    },
+    {
+      "id": "chair-w1",
+      "cat": "dining-chair.shell.black",
+      "pos": [
+        14.9,
+        2.15
+      ],
+      "rotY": 90
+    },
+    {
+      "id": "chair-w2",
+      "cat": "dining-chair.shell.black",
+      "pos": [
+        14.9,
+        2.95
+      ],
+      "rotY": 90
+    },
+    {
+      "id": "chair-e1",
+      "cat": "dining-chair.shell.black",
+      "pos": [
+        16.2,
+        2.15
+      ],
+      "rotY": 270,
+      "est": true
+    },
+    {
+      "id": "chair-e2",
+      "cat": "dining-chair.shell.black",
+      "pos": [
+        16.2,
+        2.95
+      ],
+      "rotY": 270,
+      "est": true
+    },
+    {
+      "id": "pendant-1",
+      "cat": "light.pendant.cone-white",
+      "pos": [
+        15.55,
+        2.15
+      ]
+    },
+    {
+      "id": "pendant-2",
+      "cat": "light.pendant.cone-white",
+      "pos": [
+        15.55,
+        2.95
+      ]
+    },
+    {
+      "id": "fridge-housing",
+      "cat": "storage.tall.white",
+      "pos": [
+        17.2,
+        1.97
+      ],
+      "size": [
+        1.0,
+        2.4,
+        0.65
+      ],
+      "note": "H07 white tall unit (fridge)"
+    },
+    {
+      "id": "pantry",
+      "cat": "storage.tall.plywood",
+      "pos": [
+        18.35,
+        2.17
+      ],
+      "size": [
+        1.1,
+        2.4,
+        0.6
+      ],
+      "est": true
+    }
+  ],
+  "decor": []
+}

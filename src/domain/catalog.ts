@@ -20,6 +20,10 @@ export interface MaterialDef {
   metal?: number;
   opacity?: number;
   texture?: "tile-60x120" | "tile-60x60" | "speckle";
+  /** photo-sourced surface (under /public), tiled with mirrored repeat. Surfaces have world-metre UVs. */
+  image?: string;
+  /** real-world size [u, v] in metres one copy of `image` covers (u = along the wall / plan x, v = up / plan z) */
+  tile?: [number, number];
 }
 
 interface CatalogFile {

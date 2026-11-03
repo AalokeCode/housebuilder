@@ -44,3 +44,12 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /blob-report/
+
+# model authoring scratch (regenerable) and reference material we may not redistribute
+/models/houses/*/work/small/
+/models/houses/*/work/tex-check.png
+/models/houses/*/refs/context/
+
+# raw property packs (inputs, not part of the app)
+/output/
+/samples/

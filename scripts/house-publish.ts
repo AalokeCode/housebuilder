@@ -16,6 +16,7 @@ import path from "node:path";
 import sharp from "sharp";
 import { SLUG } from "../src/server/house-repository";
 import { HouseService } from "../src/server/house-service";
+import { houseDir, PUBLIC_HOUSES_DIR } from "../src/server/paths";
 
 const PHOTO = /\.(jpe?g|png|webp)$/i;
 
@@ -37,8 +38,8 @@ async function main() {
     process.exit(1);
   }
 
-  const refs = path.join(process.cwd(), "houses", slug, "refs");
-  const out = path.join(process.cwd(), "public", "houses", slug, "photos");
+  const refs = path.join(houseDir(slug), "refs");
+  const out = path.join(PUBLIC_HOUSES_DIR, slug, "photos");
   await mkdir(out, { recursive: true });
   const files = (await readdir(refs)).filter((f) => PHOTO.test(f) && !/collage|^plan\./i.test(f)).sort();
   const photos: { id: string; w: number; h: number }[] = [];
@@ -57,7 +58,7 @@ async function main() {
   }
   await writeFile(path.join(out, "manifest.json"), JSON.stringify({ photos, cover }, null, 2) + "\n");
 
-  const specPath = path.join(process.cwd(), "houses", slug, "house.json");
+  const specPath = path.join(houseDir(slug), "house.json");
   const spec = JSON.parse(await readFile(specPath, "utf8"));
   spec.meta.status = draft ? "draft" : "published";
   if (!draft) spec.meta.reviewed = new Date().toISOString().slice(0, 10);

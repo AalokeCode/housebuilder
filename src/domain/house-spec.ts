@@ -29,10 +29,14 @@ export const RoomType = z.enum([
   "bathroom",
   "hall",
   "balcony",
+  "terrace",
   "storage",
   "other",
 ]);
 export type RoomType = z.infer<typeof RoomType>;
+
+/** Open-air room types: no ceiling, excluded from the interior area. Balconies get a glass railing; terraces (decks) none. */
+export const isOutdoor = (t: RoomType) => t === "balcony" || t === "terrace";
 
 export const RoomSpec = z.object({
   id: Id,
@@ -136,6 +140,8 @@ export const HouseMeta = z.object({
   locality: z.string().optional(),
   /** ISO date the model was last reviewed */
   reviewed: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "YYYY-MM-DD").optional(),
+  /** window view: equirect background under /public/env (default: the city skyline). `yaw` aims its centre (rad). */
+  sky: z.object({ low: z.string().startsWith("/"), high: z.string().startsWith("/"), yaw: z.number().optional() }).optional(),
   /** hand-off to the host listing / enquiry page (the tour module has no lead capture) */
   cta: z.object({ label: z.string().min(1).max(40), href: z.string().min(1) }).optional(),
 });

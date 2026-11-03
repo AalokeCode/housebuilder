@@ -3,9 +3,9 @@
 A tour module that turns listing photos into 3D walkthroughs. They run in the browser on iOS, Android and desktop.
 
 - **Interior tours** (`/tour/<slug>`):
-  - Opens on a cover with the real photo first, then you choose between a **guided tour** (one narrated stop per room, about 1 min) and free **exploration**.
-  - Free exploration has walk mode with collision, the dollhouse view, a room list, a schematic mini-plan, and a 3D-vs-photo comparison.
-  - Voice-over comes with line-by-line subtitles.
+  - Opens on a full-screen cover: the house as a slowly turning dollhouse on a black stage, with a floating card (title, facts, description). Choose a **guided tour** (one narrated stop per room, about 1 min) or free **exploration**; details, plan and photos are below the fold.
+  - Free exploration keeps the view clear: the schematic map sits bottom-left (tap a room to go there), the tools (guided, walk, dollhouse, photo compare, voice, info) bottom-right next to `?` help. Walk mode has collision.
+  - Voice-over comes with line-by-line subtitles that follow the speech.
 - **Drone showcases** (`/site/<slug>`):
   - An aerial camera moves through chapters around a building and its surroundings.
   - The highlighted elements glow, and the voice-over has word-synced captions.
@@ -16,6 +16,16 @@ A tour module that turns listing photos into 3D walkthroughs. They run in the br
 Stack: Next.js 16 (App Router, Cache Components), React 19, three.js 0.187, React Three Fiber 9, drei, postprocessing (N8AO), Zod 4, Zustand, Tailwind 4, Lucide. Tests use Vitest and Playwright.
 
 > Scope: this repo is the **tour module**. Listing data, enquiries/leads, accounts and analytics belong to the host app. A tour hands off to the host through `meta.cta` (a link) and can be linked to per room with `?room=<id>`.
+
+## Examples
+
+| Model | Kind | Route | Shows |
+|---|---|---|---|
+| `models/houses/dubai-1br-sample` | apartment (photo collage) | `/tour/dubai-1br-sample` | photo-only reconstruction, city skyline view, TRELLIS bed, photo-crop art/rugs |
+| `models/houses/apple-farm-reference` | single-storey farmhouse (plan + photos) | `/tour/apple-farm-reference` | plan tracing with scale resolved against the published area, solved cameras, floor/ceiling/wall textures rectified from the photos, two-sided walls (concrete corridor), open deck (`terrace`), ground-level valley sky (`meta.sky`) |
+| `models/buildings/bay-residences-sample` | tower site | `/site/bay-residences-sample` | drone showcase |
+
+Apple Farm House is an architecture reference (2m2 architects; photos Shin Kyungsub, via ArchDaily). Its images are included for evaluation only. No redistribution licence has been established, so obtain permission before using them in marketing or a public deployment. Exterior photos and drawings stay local (`refs/context/` is git-ignored).
 
 ---
 
@@ -48,9 +58,10 @@ pnpm dev -p 3210                  # http://localhost:3210
 │   ├── site/           drone-showcase viewer (R3F)
 │   ├── assets/         catalog.json, asset-manifest.json (content hashes), asset() helper
 │   └── proxy.ts        locks /preview in production (PREVIEW_TOKEN)
-├── houses/<slug>/      house.json, refs/ (photos), work/ (per-room items, notes), shots/, report.md
-├── sites/<slug>/       site.json for drone showcases
-├── public/             models/ (GLB), textures/, env/ (HDRI + sky), houses/<slug>/ (crops, photos, og.jpg)
+├── models/             authored content, read at build time (paths: src/server/paths.ts) — not public/models/ (GLBs)
+│   ├── houses/<slug>/      house.json, refs/ (photos, plan), work/ (per-room items, cameras, notes), shots/, report.md
+│   └── buildings/<slug>/   site.json for drone showcases
+├── public/             models/ (GLB), textures/, env/ (HDRI + skies), houses/<slug>/ (crops, textures, photos, og.jpg)
 ├── scripts/            CLI: validate, publish, preview, fetch/optimize assets, asset manifest
 ├── tests/              unit/ (Vitest, domain + repositories), e2e/ (Playwright, desktop + touch)
 ├── docs/               backlog (next-todo.md) and product/pipeline reviews
@@ -93,7 +104,7 @@ refs/ photos ──/convert-house──▶ house.json (status: draft) ──▶ 
 ## Architecture
 
 ```
-houses/<slug>/house.json + work/rooms/*.items.json      (agent-authored HouseSpec v1)
+models/houses/<slug>/house.json + work/rooms/*.items.json      (agent-authored HouseSpec v1)
         │  FileHouseRepository     slug check, safe JSON, path containment
         ▼
 HouseCompiler (domain)            rooms → walls / openings / items / colliders / obstacles / guided tour
@@ -115,16 +126,17 @@ HouseValidator (domain)           geometry, content, walkable hotspots, tour ids
 - **Rooms, not walls, are authored.** Walls come from the polygon edges:
   - A shared edge becomes an interior wall.
   - A lone edge becomes an exterior wall.
-  - A balcony edge becomes a glass railing.
+  - A balcony edge becomes a glass railing; a `terrace` (deck) edge gets no wall, only a walking boundary.
+  - Thick walls are two rooms' exterior walls back to back (leave a 0.5 m gap); perpendicular overlaps are trimmed by the compiler.
   - An open-plan edge with a ceiling step becomes a bulkhead.
 - **Collision covers walls and furniture.** The compiler emits furniture and kitchen footprints as `obstacles`. Glides fall back to a fade-cut when the straight path is blocked, so the camera never passes through walls or furniture.
 - **Honest media.**
   - "Actual photo", "3D reconstruction", "Estimated" and "Not photographed" labels sit next to the content they describe.
   - A photo's room is computed by ray-marching the view line from its photo-match camera.
-- **Photo-exact surfaces.** Artwork, cushions and rugs are perspective-corrected crops of the listing photos.
+- **Photo-exact surfaces.** Artwork, cushions and rugs are perspective-corrected crops of the listing photos. Floors, slatted ceilings, panelled or board-formed walls and decks are rectified through the solved camera (exact homography) and tiled as catalog materials (`image` + `tile`, world-metre UVs). Each face of an interior wall takes its own room's finish.
 - **Solved cameras.** Photo-match cameras are fitted to structural points (`scripts/camera/solve-camera.py`); residuals drive layout corrections.
 - **Real procedural construction.** Legs are anchored by both ends and sunk into what they carry, frames lap into walls, and nothing is coplanar (no flicker). Bedding uses draped cloth and puffy pillow geometry. Doors open on click.
-- **Window view.** A photographic skyline skybox (horizon at eye level, river below, no people) is aimed at the main glazing; the HDRI is used for lighting only.
+- **Window view.** A photographic skybox per house (`meta.sky`, default: the river skyline for towers; ground-level houses use a raw CC0 panorama) is aimed at the main glazing; the HDRI is used for lighting only. Dollhouse views use a black backdrop.
 - **Every failure path ends somewhere useful.**
   - No WebGL, a lost context or a viewer crash shows the photos, plan, room details and transcript, with a retry.
   - The browser back button closes the 3D view.
@@ -158,7 +170,7 @@ HouseValidator (domain)           geometry, content, walkable hotspots, tour ids
 | `PREVIEW_TOKEN` | enables `/preview` in production (`/preview/<slug>?token=…` once, then a cookie) |
 
 - Static assets under `public/` are served immutable when versioned, so put a CDN in front.
-- Pages read `houses/` and `sites/` at build time, so ship those folders with the build.
+- Pages read `models/houses/` and `models/buildings/` at build time, so ship `models/` with the build.
 
 ## Voice-over
 

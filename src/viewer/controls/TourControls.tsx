@@ -2,7 +2,7 @@
 
 import { OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { CompiledHouse } from "@/domain/compiled";
 import { walkBlocked } from "@/domain/collision";
@@ -24,8 +24,10 @@ function ignoreKey(e: KeyboardEvent) {
 const angleDelta = (a: number, b: number) => Math.atan2(Math.sin(b - a), Math.cos(b - a));
 
 /** Walk (first-person + hotspots), dollhouse (orbit), photo (locked photo-match camera). */
-export function TourControls({ house, reducedMotion, onRoom }: { house: CompiledHouse; reducedMotion: boolean; onRoom: (id: string | null) => void }) {
+export function TourControls({ house, reducedMotion, preview = false, onRoom }: { house: CompiledHouse; reducedMotion: boolean; preview?: boolean; onRoom: (id: string | null) => void }) {
   const { camera, gl, invalidate } = useThree();
+  const get = useThree((s) => s.get);
+  const size = useThree((s) => s.size);
   const cam = camera as THREE.PerspectiveCamera;
   const mode = useTour((s) => s.mode);
   const photo = useTour((s) => s.photo);
@@ -44,6 +46,24 @@ export function TourControls({ house, reducedMotion, onRoom }: { house: Compiled
   const room = useRef<string | null>(null);
   const lastPose = useRef({ x: NaN, z: NaN, yaw: NaN });
   const center = useMemo(() => new THREE.Vector3((house.bounds.min[0] + house.bounds.max[0]) / 2, 0.8, (house.bounds.min[1] + house.bounds.max[1]) / 2), [house]);
+  // dollhouse framing: fit the plan's bounding circle to the frame (a 20 m farmhouse sits further back than a 7 m flat).
+  // The cover preview fills its stage edge to edge but leaves the info card's side free (desktop: right 28 %;
+  // phones: the bottom ~45 %, where the card sits).
+  const fit = useCallback(
+    (aspect: number, wide: boolean) => {
+      const r = Math.hypot(house.bounds.max[0] - house.bounds.min[0], house.bounds.max[1] - house.bounds.min[1]) / 2;
+      let vf = THREE.MathUtils.degToRad(45) / 2;
+      let a = aspect;
+      if (preview) {
+        if (wide) a *= 0.72;
+        else vf *= 0.58;
+      }
+      const hf = Math.atan(Math.tan(vf) * a);
+      const dist = (r * (preview ? 0.92 : 1.05)) / Math.sin(Math.min(vf, hf));
+      return { offset: new THREE.Vector3(7, 13, 9).normalize().multiplyScalar(dist), max: Math.max(30, dist * 1.8) };
+    },
+    [house, preview],
+  );
 
   // demand frameloop: any store change (joystick, travel, mode) schedules a frame
   useEffect(() => useTour.subscribe(() => invalidate()), [invalidate]);
@@ -58,8 +78,10 @@ export function TourControls({ house, reducedMotion, onRoom }: { house: Compiled
       cam.lookAt(new THREE.Vector3(...c.lookAt));
       cam.updateProjectionMatrix();
     } else if (mode === "dollhouse") {
+      const { size: sz } = get(); // read, not subscribed: a mobile URL-bar resize must not reset a visitor's orbit
+      const o = fit(sz.width / sz.height, sz.width >= 1024);
       cam.fov = 45;
-      cam.position.set(center.x + 7, 13, center.z + 9);
+      cam.position.copy(center).add(o.offset);
       cam.lookAt(center);
       cam.updateProjectionMatrix();
     } else if (mode === "walk") {
@@ -67,7 +89,21 @@ export function TourControls({ house, reducedMotion, onRoom }: { house: Compiled
       cam.updateProjectionMatrix();
     }
     invalidate();
-  }, [mode, photo, house, cam, center, invalidate]);
+  }, [mode, photo, house, cam, center, fit, get, invalidate]);
+
+  // cover preview: re-fit on resize and slide the model off-centre so the info card never covers it
+  useEffect(() => {
+    if (preview && mode === "dollhouse") {
+      const wide = size.width >= 1024;
+      const o = fit(size.width / size.height, wide);
+      const dir = cam.position.clone().sub(center).normalize();
+      cam.position.copy(center).addScaledVector(dir, o.offset.length());
+      if (wide) cam.setViewOffset(size.width, size.height, size.width * 0.15, 0, size.width, size.height);
+      else cam.setViewOffset(size.width, size.height, 0, size.height * 0.2, size.width, size.height);
+    } else cam.clearViewOffset();
+    cam.updateProjectionMatrix();
+    invalidate();
+  }, [preview, mode, size, fit, cam, center, invalidate]);
 
   // pointer look + keys (walk only)
   useEffect(() => {
@@ -124,8 +160,11 @@ export function TourControls({ house, reducedMotion, onRoom }: { house: Compiled
   // walls, room bounds and furniture footprints; if already stuck (e.g. a deep link), allow moving out
   const blocked = (x: number, z: number) => walkBlocked(house, [x, z]) && !walkBlocked(house, [walkPos.current.x, walkPos.current.z]) ;
 
-  useFrame((_, dt) => {
+  useFrame((_, rawDt) => {
     if (mode !== "walk") return;
+    // frameloop="demand": the first frame after an idle spell reports the whole idle time as delta, which made
+    // walking teleport and travel snap ("movement suddenly jumps") — cap it at two 60 Hz frames
+    const dt = Math.min(rawDt, 1 / 30);
     const st = useTour.getState();
     const p = walkPos.current;
     const t = st.travel;
@@ -191,5 +230,17 @@ export function TourControls({ house, reducedMotion, onRoom }: { house: Compiled
     }
   });
 
-  return mode === "dollhouse" ? <OrbitControls makeDefault target={center} maxPolarAngle={1.3} minDistance={4} maxDistance={30} enableDamping={!reducedMotion} /> : null;
+  return mode === "dollhouse" ? (
+    <OrbitControls
+      makeDefault
+      target={center}
+      maxPolarAngle={1.3}
+      minDistance={4}
+      maxDistance={fit(size.width / size.height, size.width >= 1024).max}
+      enableDamping={!reducedMotion}
+      enabled={!preview}
+      autoRotate={preview && !reducedMotion}
+      autoRotateSpeed={0.3}
+    />
+  ) : null;
 }
